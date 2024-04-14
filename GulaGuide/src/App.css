@@ -1,0 +1,40 @@
+#root {
+  width: 100vw;
+  height: 100vh;
+  text-align: center;
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.App {
+  height: 100vh;
+  width: 100vw;
+  overflow-x: hidden;
+  background-color: #fff;
+  overflow-y: auto;
+}
+
+/* Estilos de la barra de desplazamiento para navegadores que admiten la propiedad scrollbar-width */
+.App::-webkit-scrollbar {
+  width: 8px; /* Ancho de la barra de desplazamiento */
+}
+
+.App::-webkit-scrollbar-thumb {
+  background-color: #bbb; /* Color del pulgar de la barra de desplazamiento */
+  border-radius: 4px; /* Radio de borde del pulgar de la barra de desplazamiento */
+}
+
+/* Estilos de la barra de desplazamiento para navegadores que no admiten la propiedad scrollbar-width */
+/* En estos navegadores, se usará el estilo predeterminado de la barra de desplazamiento */
+
+/* Cuando se pasa el cursor sobre el contenedor, se muestra la barra de desplazamiento vertical */
+.App:hover::-webkit-scrollbar-thumb {
+  background-color: #888; /* Cambio de color del pulgar al pasar el cursor */
+}
+
