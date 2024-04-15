@@ -1,1 +1,5 @@
-./venv
+_pycache_/
+venv/
+*.png
+.idea/misc.xml
+.idea/editor.xml
