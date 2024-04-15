@@ -1,5 +1,6 @@
-_pycache_/
+__pycache__/
 venv/
 *.png
 .idea/misc.xml
 .idea/editor.xml
+credenciales super importantes.txt
