@@ -23,7 +23,7 @@
 
 .card-side::before {
   position: absolute;
-  content: 'Femenino';
+  content: 'Comensal';
   left: -80px;
   top: 0;
   width: 100px;
@@ -34,7 +34,7 @@
 
 .card-side::after {
   position: absolute;
-  content: 'Masculino';
+  content: 'Restaurante';
   left: 70px;
   top: 0;
   width: 100px;

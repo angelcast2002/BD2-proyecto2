@@ -33,7 +33,7 @@ const HeaderHome = () => {
       <div className={styles.container}>
         <div className={styles.logoheader}>
           <button className={styles.buttonlogo} onClick={handleHome} type="button">
-            <img src="/images/Ue_2.svg" alt="Logo" />
+            <img src="/images/logo.png" alt="Logo" />
           </button>
         </div>
         <div className={styles.menuicon} onClick={handleShowNavbar}>
