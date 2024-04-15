@@ -153,5 +153,30 @@ class AuraNeo4j:
             return tx.run(create_query, **parking).single()[0]
         except Exception as e:
             return 400
+    
+    def search_restaurant(self, user_id: str):
+        with self.driver.session() as session:
+            return session.read_transaction(self._search_restaurant, user_id)
         
+    @staticmethod
+    def _search_restaurant(tx: Transaction, user_id: str):
+        search_query = "MATCH (c:Restaurant {user_id: $user_id}) RETURN c"
+        try:
+            return tx.run(search_query, user_id=user_id).single()
+        except Exception as e:
+            return 404
         
+    def search_ingredient(self, name: str):
+        with self.driver.session() as session:
+            return session.read_transaction(self._search_ingredient, name)
+        
+    @staticmethod
+    def _search_ingredient(tx: Transaction, name: str):
+        search_query = "MATCH (i:Ingredient {name: $name}) RETURN i"
+        try:
+            return tx.run(search_query, name=name).single()
+        except Exception as e:
+            return 404 # No se encontró el ingrediente
+        
+    
+    

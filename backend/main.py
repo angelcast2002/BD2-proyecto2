@@ -145,6 +145,27 @@ def create_parking(parking: Parking):
         return {"status": 400, "message": "Error creando el parqueadero"}
     else:
         return {"status": 200, "message": "Parqueadero creado exitosamente"}
+    
+
+@app.get("/get/restaurant")
+def search_restaurant(restaurant_id: str):
+    aura_response = aura.search_restaurant(restaurant_id)
+    if aura_response == 404:
+        return {"status": 404, "message": "El restaurante no existe"}
+    elif aura_response == 400:
+        return {"status": 400, "message": "Error obteniendo el restaurante"}
+    else:
+        return aura_response
+
+
+@app.get("/get/ingredient")
+def search_ingredient(ingredient_id: str):
+    aura_response = aura.search_ingredient(ingredient_id)
+    if aura_response == 404:
+        return {"status": 404, "message": "El ingrediente no existe"}
+    else:
+        return aura_response
+    
 
 
 
