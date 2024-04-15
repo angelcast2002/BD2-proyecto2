@@ -178,5 +178,122 @@ class AuraNeo4j:
         except Exception as e:
             return 404 # No se encontró el ingrediente
         
+    def search_dish(self, name: str):
+        with self.driver.session() as session:
+            return session.read_transaction(self._search_dish, name)
+        
+    @staticmethod
+    def _search_dish(tx: Transaction, name: str):
+        search_query = "MATCH (d:Dish {name: $name}) RETURN d"
+        try:
+            return tx.run(search_query, name=name).single()
+        except Exception as e:
+            return 404 # No se encontró el plato
+        
+    def search_location(self, city: str, zone: int):
+        with self.driver.session() as session:
+            return session.read_transaction(self._search_location, city, zone)
+        
+    @staticmethod
+    def _search_location(tx: Transaction, city: str, zone: int):
+        search_query = "MATCH (l:Location {city: $city, zone: $zone}) RETURN l"
+        try:
+            return tx.run(search_query, city=city, zone=zone).single()
+        except Exception as e:
+            return 404 # No se encontró la ubicación
+        
+    def search_parking(self, parking_id: str):
+        with self.driver.session() as session:
+            return session.read_transaction(self._search_parking, parking_id)
+        
+    @staticmethod
+    def _search_parking(tx: Transaction, parking_id: str):
+        search_query = "MATCH (p:Parking {parking_id: $parking_id}) RETURN p"
+        try:
+            return tx.run(search_query, parking_id=parking_id).single()
+        except Exception as e:
+            return 404 # No se encontró el parqueadero
+        
+
+
+    # Crear relacion entre usuario y restaurante llamada visitó con propiedades: dishes, total, date, rating, comment
+    def create_visit(self, visit: dict):
+        with self.driver.session() as session:
+            return session.write_transaction(self._create_visit, visit)
+        
+    @staticmethod
+    def _create_visit(tx: Transaction, visit: dict):
+        create_query = (
+            "MATCH (u:Diner {user_id: $user_id}), (c:Restaurant {user_id: $restaurant_id}) "
+            "CREATE (u)-[r:VISITED {dishes: $dishes, total: $total, date: $date, rating: $rating, comment: $comment}]->(c) "
+            "RETURN r"
+        )
+        try:
+            return tx.run(create_query, **visit).single()[0]
+        except Exception as e:
+            return 400
+    # buscar la relacion entre restaurante y plato llamada sells con propiedades: price, sell_time and cost. si existe, retornar
+    # la lista de platos que vende el restaurante
+
+    def search_sells_relationship(self, restaurant_id: str):
+        with self.driver.session() as session:
+            return session.read_transaction(self._search_sells_relationship, restaurant_id)
+
+    @staticmethod
+    def _search_sells_relationship(tx: Transaction, restaurant_id: str):
+        search_query = (
+            "MATCH (r:Restaurant {user_id: $restaurant_id})-[s:SELLS]->(d:Dish) "
+            "RETURN d.name AS dish_name"
+        )
+        try:
+            result = tx.run(search_query, restaurant_id=restaurant_id)
+            return [record["dish_name"] for record in result]
+        except Exception as e:
+            return None
+
     
     
+    def diner_on_restaurant(self, diner_on_restaurnt:dict): # debería recibir del basemodel diner_on_restaurant. 
+        with self.driver.session() as session:
+            return session.write_transaction(self._diner_on_restaurant, diner_on_restaurnt)
+        
+    @staticmethod
+    def _diner_on_restaurant(tx: Transaction, diner_on_restaurnt: dict):
+        """
+        diner on restaurant
+            diner_id: str
+            restaurant_id: str
+            its_fav: bool
+            user_likes: bool
+            comments: str
+        relation should be named diner_on_restaurnt
+        """
+
+        search_query = (
+            "MATCH (d:Diner {user_id: $diner_id}), (r:Restaurant {user_id: $restaurant_id}) "
+            "MERGE (d)-[dor:DINER_ON_RESTAURANT {its_fav: $its_fav, user_likes: $user_likes, comments: $comments}]->(r) "
+            "RETURN dor"
+        )
+
+        try:
+            return tx.run(search_query, **diner_on_restaurnt).single()[0]
+        except Exception as e:
+            return 400
+
+
+    # Crear relacion entre restaurante y plato llamada sells con propiedades: price, sell_time and cost
+    def restaurant_sells(self, relationship: dict):
+        with self.driver.session() as session:
+            return session.write_transaction(self._restaurant_sells, relationship)
+        
+    @staticmethod
+    def _restaurant_sells(tx: Transaction, relationship: dict):
+        search_query = (
+            "MATCH (r:Restaurant {user_id: $restaurant_id}), (d:Dish {name: $dish_name}) "
+            "CREATE (r)-[s:SELLS {price: $price, sell_time: $sell_time, cost: $cost}]->(d) "
+            "RETURN s"
+        )
+        try:
+            return tx.run(search_query, **relationship).single()[0]
+        except Exception as e:
+            return 400

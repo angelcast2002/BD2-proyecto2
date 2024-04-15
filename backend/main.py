@@ -67,6 +67,8 @@ class UserRestaurante(BaseModel):
 
 @app.post("/user/signup/restaurant")
 def restaurant_signup(userRestaurant: UserRestaurante):
+    #mandar el rating como NA
+    userRestaurant.rating = "NA"
     aura_response = aura.create_restaurant(userRestaurant.model_dump())
     if aura_response == 409:
         return {"status": 409, "message": "Restaurante ya existe"}
@@ -166,8 +168,88 @@ def search_ingredient(ingredient_id: str):
     else:
         return aura_response
     
+@app.get("/get/dish")
+def search_dish(dish_id: str):
+    aura_response = aura.search_dish(dish_id)
+    if aura_response == 404:
+        return {"status": 404, "message": "El plato no existe"}
+    else:
+        return aura_response
+    
+@app.get("/get/location")
+def search_location(city: str, zone: int):
+    aura_response = aura.search_location(city, zone)
+    if aura_response == 404:
+        return {"status": 404, "message": "La locacion no existe"}
+    else:
+        return aura_response
+    
+
+@app.get("/get/parking")
+def search_parking(parking_id: str):
+    aura_response = aura.search_parking(parking_id)
+    if aura_response == 404:
+        return {"status": 404, "message": "El parqueadero no existe"}
+    else:
+        return aura_response
 
 
+class visito(BaseModel):
+    user_id: str
+    restaurant_id: str
+    dishes: list
+    date: datetime
+    total: float
+    rating: float
+    comment: str
+
+@app.post("/diner/visit")
+def create_visito(visito: visito):
+    
+    aura_response = aura.create_visit(visito.model_dump())
+    if aura_response == 400:
+        return {"status": 400, "message": "Error creando la visita"}
+    else:
+        return {"status": 200, "message": "Visita creada exitosamente"}
+    
+class diner_on_restaurant(BaseModel):
+    diner_id: str
+    restaurant_id: str
+    its_fav: bool
+    user_likes: bool
+    comments: str
+
+@app.post("/diner/on_restaurant")
+def diner_on_restaurant(diner_on_restaurant: diner_on_restaurant):
+    aura_response = aura.diner_on_restaurant(diner_on_restaurant.model_dump())
+    if aura_response == 400:
+        return {"status": 400, "message": "Error creando la relacion"}
+    else:
+        return {"status": 200, "message": "Relacion creada exitosamente"}
+
+class restaurant_sells(BaseModel):
+    restaurant_id: str
+    dish_id: str
+    price: float
+    sell_time: str
+    cost: float
+
+@app.post("/restaurant/sells")
+def restaurant_sells(restaurant_sells: restaurant_sells):
+    aura_response = aura.restaurant_sells(restaurant_sells.model_dump())
+    if aura_response == 400:
+        return {"status": 400, "message": "Error creando la relacion"}
+    else:
+        return {"status": 200, "message": "Relacion creada exitosamente"}       
+
+@app.get("/restaurant/dishes")
+def get_dishes(restaurant_id: str):
+    aura_response = aura.search_sells_relationship(restaurant_id)
+    if aura_response == 404:
+        return {"status": 404, "message": "El restaurante no existe"}
+    else:
+        return aura_response
+    
 
 # Para correrlo en local
 if __name__ == "__main__":
