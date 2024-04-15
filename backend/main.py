@@ -26,43 +26,53 @@ aura = AuraNeo4j()
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
+    return {"ANS": "HOLA ANGEL TONOTO"}
 
 @app.get("/user/login")
 def user_login():
     return {"login": "ok"}
 
-class UserComensal(BaseModel):
-    userid: str
+class UserDiner(BaseModel):
+    user_id: str
     password: str
-    nombre: str
-    apellido: str
-    edad: int
-    presupuesto_prom: float
-    tieneVehiculo: bool
-    fecha_registro: datetime
-    imagen: str
+    name: str
+    lastname: str
+    birthdate: int
+    spending: float
+    has_car: bool
+    image: str
 
-@app.post("/user/signup/comensal")
-def comensal_signup(user_comensal: UserComensal):
-    aura.create_comensal(user_comensal.model_dump())
-    return {"message": "Comensal creado exitosamente"}
+@app.post("/user/signup/diner")
+def diner_signup(userDiner: UserDiner):
+    aura_response = aura.create_diner(userDiner.model_dump())
+    if aura_response == 409:
+        return {"status": 409, "message": "El usuario ya existe"}
+    elif aura_response == 400:
+        return {"status": 400, "message": "Error creando el usuario"}
+    else:
+        return {"status": 200, "message": "Usuario creado exitosamente"}
     
-
-
-
-class user_restaurante(BaseModel):
-    userid: str
+class UserRestaurante(BaseModel):
+    user_id: str
     password: str
-    nombre: str
-    rango_precios : str
-    calificacion: float
-    horario: str
-    vende_alcohol: bool
+    name: str
+    prices : str
+    rating: float
+    schedule: str
+    sells_alcohol: bool
     petFriendly: bool
-    fecha_registro: datetime
     imagen: str
+    pass
 
+@app.post("/user/signup/restaurant")
+def restaurant_signup(userRestaurant: UserRestaurante):
+    aura_response = aura.create_restaurant(userRestaurant.model_dump())
+    if aura_response == 409:
+        return {"status": 409, "message": "Restaurante ya existe"}
+    elif aura_response == 400:
+        return {"status": 400, "message": "Error creando el restaurante"}
+    else:
+        return {"status": 200, "message": "Restaurante creado exitosamente"}
 
 # Para correrlo en local
 if __name__ == "__main__":
