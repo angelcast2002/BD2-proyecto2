@@ -37,13 +37,15 @@ class UserDiner(BaseModel):
     password: str
     name: str
     lastname: str
-    birthdate: int
+    birthdate: str
     spending: float
     has_car: bool
     image: str
 
 @app.post("/user/signup/diner")
 def diner_signup(userDiner: UserDiner):
+    #parsear el birthdate a date AAAA-MM-DD
+    userDiner.birthdate = datetime.strptime(userDiner.birthdate, '%Y-%m-%d').date()
     aura_response = aura.create_diner(userDiner.model_dump())
     if aura_response == 409:
         return {"status": 409, "message": "El usuario ya existe"}
