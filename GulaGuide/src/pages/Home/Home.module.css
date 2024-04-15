@@ -1,0 +1,154 @@
+.homeContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  background-color: #fff;
+}
+
+.homeContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+}
+
+.topcontent img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.button {
+  margin-left: auto;
+  width: 20%;
+  margin-right: 20px;
+}
+
+.topcontent {
+  display: flex;
+  gap: 20px;
+  background-color: #fff;
+  align-items: center;
+  width: 100%;
+  border-bottom: 2px solid #ccc;
+}
+
+.image img {
+  width: 100%;
+  max-height: 800px;
+  object-fit: cover;
+}
+
+.info {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  background-color: transparent;
+}
+
+.infobutton {
+  width: 800px;
+}
+
+.button {
+  display: flex;
+  gap: 20px;
+  justify-content: space-around;
+  height: 60px;
+  background-color: transparent;
+}
+
+.image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.lottiephone,
+.titlephone {
+  display: none;
+}
+
+.title h1 {
+  font-size: 120px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  color: #94bd0f;
+  margin: 0;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  background-color: transparent;
+}
+
+span.text {
+  font-size: 40px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+}
+
+@media (max-width: 967px) {
+  .homeContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: #fff;
+  }
+
+  .button {
+    width: 50%;
+  }
+
+  .image {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .title h1,
+  h2 {
+    display: none;
+  }
+
+  .image img {
+    max-height: 100%;
+  }
+
+  .info {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .infobutton {
+    width: 100%;
+  }
+
+  .button {
+    align-items: center;
+  }
+
+  .lottie {
+    display: none;
+  }
+
+  .lottiephone,
+  .titlephone {
+    display: block;
+  }
+
+  .titlephone h1 {
+    color: #94bd0f;
+    font-size: 60px;
+    margin: 10px;
+  }
+}

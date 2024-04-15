@@ -2,6 +2,7 @@ import { StoreContext } from "storeon/react"
 import store from "@store"
 import React from "react"
 import Page from "./pages/index"
+import "./assets/fonts/fonts.css"
 import "./App.css"
 
 const App = () => {

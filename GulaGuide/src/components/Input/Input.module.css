@@ -1,0 +1,75 @@
+.inputContainer {
+  font-family: Arial;
+  font-size: 24px;
+  height: 40px;
+  user-select: none;
+}
+
+.inputContainer input {
+  padding: 10px 5px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  width: calc(100% - 20px);
+  color: #000;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.inputContainer input:focus {
+  border-color: #a08ae5;
+  box-shadow: 0 0 0 3px rgba(160, 138, 229, 0.25);
+  outline: none;
+}
+
+.inputContainer input[type="date"]::-webkit-calendar-picker-indicator {
+  background-color: #6E51D9;
+  border-radius: 5px;
+  color: #000; /* Cambia el color del icono del calendario */
+}
+
+.inputContainer input[type="date"]::-webkit-datetime-edit-fields-wrapper,
+.inputContainer input[type="date"]::-webkit-datetime-edit-text {
+  background-color: transparent;
+  color: #000; /* Cambia el color del texto en el calendario */
+}
+
+.eyeContainer {
+  display: flex;
+  position: relative;
+  right: 15px;
+  bottom: 28px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  margin-left: auto;
+  cursor: pointer;
+  background-color: transparent;
+  width: 15px;
+  height: 15px;
+}
+
+.eyeContainer:hover {
+  transform: scale(0.85);
+  border: none;
+}
+
+.eyeContainer img {
+  width: 15px;
+  height: 15px;
+}
+
+@media (max-width: 600px){
+  .inputContainer input {
+    width: 100%;
+    margin: 0;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .inputContainer{
+    width: 100%;
+  }
+}

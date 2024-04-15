@@ -1,0 +1,31 @@
+.mainContainer {
+  display: flex;
+  gap: 40px;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 20px 20px;
+}
+
+.actions {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+}
+
+.actions a {
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+}
+
+.actions a:hover {
+  color: #a08ae5;
+}
+
+svg {
+  display: inline-block;
+  vertical-align: top;
+  cursor: pointer;
+}

@@ -1,0 +1,29 @@
+/* LoadButton.module.css */
+.button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background: linear-gradient(45deg, #03a9f4, #f441a5, #03a9f4);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  /*
+background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+  */
+  
+  .button:hover {
+    background-color: #0056b3;
+  }
+  
+  .button:active {
+    background-color: #004494;
+  }
+  
+  .button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0,123,255,.5);
+  }
+  
