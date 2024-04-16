@@ -24,6 +24,10 @@ p {
     padding: 0 40px;
 }
 
+.leftContainer h1 {
+    margin: 0;
+}
+
 
 .rightContainer{
     width: 50%;
@@ -62,4 +66,24 @@ p {
 
 .infoContainer{
     width: 90%;
+}
+
+.menuContainer{
+    width: 100%;
+    height: 700px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    align-items: center;
+
+
+    overflow-y: auto;
+    scrollbar-width: none; /* Para Firefox */
+    -ms-overflow-style: none;  /* Para Internet Explorer y Edge */
+
+}
+
+.menuContainer::-webkit-scrollbar {
+    display: none; /* Para Chrome, Safari y Opera */
 }

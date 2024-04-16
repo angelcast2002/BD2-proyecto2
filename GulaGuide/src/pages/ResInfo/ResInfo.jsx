@@ -3,7 +3,7 @@ import style from "./ResInfo.module.css"
 import { useStoreon } from "storeon/react"
 import useApi from "../../Hooks/useApi"
 import CommentsComponent from "../../components/CommentsComponent/CommentsComponent"
-import ValueList from "../../components/ValueList/ValueList"
+import MenuItem from "../../components/MenuItem/MenuItem"
 
 const ResInfo = () => {
 
@@ -44,11 +44,25 @@ const ResInfo = () => {
   console.log("user", user)
   console.log("resInfo", resInfo)
 
-  const menu = [["Plato 1", "Es un plato muy rico", "precio1"], 
-    ["Plato 2", "Es un plato muy rico", "precio2"],
-    ["Plato 3", "Es un plato muy rico", "precio3"],
-    ["Plato 4", "Es un plato muy rico", "precio4"],
+  const menu = [
+    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
+    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
+    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
+    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
+    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
+    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
+    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
+    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
+    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
+    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
+    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
+    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
+    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
+    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
+    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
   ]
+
+  console.log("menu", menu)
 
   return (
     <div className={style.resInfoContainer}>
@@ -91,7 +105,17 @@ const ResInfo = () => {
 
       </div>
       <div className={style.rightContainer}>
-        <h2>Menú</h2>       
+        <h2>Menú</h2>
+        <div className={style.menuContainer}>
+          {menu.map((item, index) => (
+            <MenuItem
+              key={index}
+              name={item[0]}
+              description={item[1]}
+              price={item[2]}
+            />
+          ))}
+        </div>
       </div>
     </div>
   )

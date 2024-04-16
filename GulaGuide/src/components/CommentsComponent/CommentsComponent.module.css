@@ -34,7 +34,7 @@
 }
 
 .commentsContainer{
-    height: 150px;
+    height: 200px;
     overflow-y: auto;
     scrollbar-width: none; /* Para Firefox */
     -ms-overflow-style: none;  /* Para Internet Explorer y Edge */
