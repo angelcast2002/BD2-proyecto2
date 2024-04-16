@@ -163,8 +163,7 @@ class AuraNeo4j:
             return 409  # Un parqueadero con este ID ya existe
 
         create_query = (
-            "MERGE (p:Parking {parking_id: $parking_id}) "
-            "RETURN p"
+            "MERGE (p:Parking {parking_id: $parking_id, price_per_hour: $price_per_hour, capacity: $capacity, handicap_friendly: $handicap_friendly, has_security: $has_security, is_covered: $is_covered}) RETURN p"
         )
         try:
             return tx.run(create_query, **parking).single()[0]
@@ -362,4 +361,85 @@ class AuraNeo4j:
             return [record["zone"] for record in result]
         except Exception as e:
             return None
+        
+    def get_all_ingredients(self):
+        with self.driver.session() as session:
+            return session.read_transaction(self._get_all_ingredients)
+        
+    @staticmethod
+    def _get_all_ingredients(tx: Transaction):
+        search_query = (
+            "MATCH (i:Ingredient) "
+            "RETURN i.name AS name"
+        )
+        try:
+            result = tx.run(search_query)
+            return [record["name"] for record in result]
+        except Exception as e:
+            return None
+        
+    def get_all_dishes(self):
+        with self.driver.session() as session:
+            return session.read_transaction(self._get_all_dishes)
+        
+    @staticmethod
+    def _get_all_dishes(tx: Transaction):
+        search_query = (
+            "MATCH (d:Dish) "
+            "RETURN d.name AS name"
+        )
+        try:
+            result = tx.run(search_query)
+            return [record["name"] for record in result]
+        except Exception as e:
+            return None
+        
+    def get_all_restaurants(self):
+        with self.driver.session() as session:
+            return session.read_transaction(self._get_all_restaurants)
+        
+    @staticmethod
+    def _get_all_restaurants(tx: Transaction):
+        search_query = (
+            "MATCH (r:Restaurant) "
+            "RETURN r.user_id AS user_id"
+        )
+        try:
+            result = tx.run(search_query)
+            return [record["user_id"] for record in result]
+        except Exception as e:
+            return None
+        
+    # Crear relacion entre diner y platillo llamada dish_opinion con propiedades: favorite, likes, comment
+    def diner_opinion(self, opinion: dict):
+        with self.driver.session() as session:
+            return session.write_transaction(self._diner_opinion, opinion)
+        
+    @staticmethod
+    def _diner_opinion(tx: Transaction, opinion: dict):
+        search_query = (
+            "MATCH (d:Diner {user_id: $diner_id}), (di:Dish {name: $dish_id}) "
+            "MERGE (d)-[do:DISH_OPINION {favorite: $favorite, likes: $likes, comment: $comment}]->(di) "
+            "RETURN do"
+        )
+        try:
+            return tx.run(search_query, **opinion).single()[0]
+        except Exception as e:
+            return 400
 
+    # Crear relacion entre restaurante y parqueadero llamada has_parking con propiedades: vallet parking, free_hours, exclusive
+    def restaurant_has_parking(self, relationship: dict):
+        with self.driver.session() as session:
+            return session.write_transaction(self._restaurant_has_parking, relationship)
+        
+    @staticmethod
+    def _restaurant_has_parking(tx: Transaction, relationship: dict):
+        search_query = (
+            "MATCH (r:Restaurant {user_id: $restaurant_id}), (p:Parking {parking_id: $parking_id}) "
+            "MERGE (r)-[hp:HAS_PARKING {vallet_parking: $vallet_parking, free_hours: $free_hours, exclusive: $exclusive}]->(p) "
+            "RETURN hp"
+        )
+        try:
+            return tx.run(search_query, **relationship).single()[0]
+        except Exception as e:
+            return 400

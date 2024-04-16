@@ -136,9 +136,9 @@ class Parking(BaseModel):
     parking_id: str
     price_per_hour: float
     capacity: int
-    hadicap_spaces: int
+    handicap_friendly: int
     has_security: bool
-    has_roof: bool
+    is_covered: bool
 
 @app.post("/creation/parking")
 def create_parking(parking: Parking):
@@ -291,6 +291,52 @@ def restaurant_location(restaurantLocation: RestaurantLocation):
     else:
         return {"status": 200, "message": "Locacion creada exitosamente"}
     
+@app.get("/get/ingredientsAll")
+def get_all_ingredients():
+    aura_response = aura.get_all_ingredients()
+    return {"status": 200, "message": "Ingredientes obtenidos exitosamente", "data": aura_response}
+
+@app.get("/get/dishesAll")
+def get_all_dishes():
+    aura_response = aura.get_all_dishes()
+    return {"status": 200, "message": "Platos obtenidos exitosamente", "data": aura_response}
+
+@app.get("/get/restaurantsAll")
+def get_all_restaurants():
+    aura_response = aura.get_all_restaurants()
+    return {"status": 200, "message": "Restaurantes obtenidos exitosamente", "data": aura_response}
+
+class dish_opinion(BaseModel):
+    dish_id: str
+    diner_id: str
+    favorite: bool
+    likes: bool
+    comment: str
+
+@app.post("/dish/opinion")
+def dish_opinion(dish_opinion: dish_opinion):
+    aura_response = aura.diner_opinion(dish_opinion.model_dump())
+    if aura_response == 400:
+        return {"status": 400, "message": "Error creando la opinion"}
+    else:
+        return {"status": 200, "message": "Opinion creada exitosamente"}
+
+class restaurant_parking(BaseModel):
+    restaurant_id: str
+    parking_id: str
+    vallet_parking: bool
+    free_hours: int
+    exclusive: bool
+
+@app.post("/restaurant/parking")
+def restaurant_parking(restaurant_parking: restaurant_parking):
+    aura_response = aura.restaurant_has_parking(restaurant_parking.model_dump())
+    if aura_response == 400:
+        return {"status": 400, "message": "Error creando la relacion"}
+    else:
+        return {"status": 200, "message": "Relacion creada exitosamente"}
+    
+
 # Para correrlo en local
 if __name__ == "__main__":
     uvicorn.run(app, port=8000)
