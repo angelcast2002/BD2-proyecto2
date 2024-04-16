@@ -5,6 +5,8 @@ import Home from "./Home/Home"
 import LogIn from "./LogIn/LogIn"
 import SignUp from "./SignUp/SignUp"
 import EditUser from "./EditUser/EditUser"
+import Recommendations from "./Recommendations/Recommendations"
+import SetSettings from "./SetSettings/SetSettings"
 
 const Page = () => {
   const { [routerKey]: route } = useStoreon(routerKey)
@@ -22,6 +24,12 @@ const Page = () => {
       break
     case "edituser":
       Component = <EditUser />
+      break
+    case "recommendations":
+      Component = <Recommendations />
+      break
+    case "setsettings":
+      Component = <SetSettings />
       break
     default:
       Component = <h1>404 Error</h1>
