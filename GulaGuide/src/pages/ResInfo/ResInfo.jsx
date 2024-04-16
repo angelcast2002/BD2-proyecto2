@@ -2,6 +2,8 @@ import React from "react"
 import style from "./ResInfo.module.css"
 import { useStoreon } from "storeon/react"
 import useApi from "../../Hooks/useApi"
+import CommentsComponent from "../../components/CommentsComponent/CommentsComponent"
+import ValueList from "../../components/ValueList/ValueList"
 
 const ResInfo = () => {
 
@@ -42,6 +44,12 @@ const ResInfo = () => {
   console.log("user", user)
   console.log("resInfo", resInfo)
 
+  const menu = [["Plato 1", "Es un plato muy rico", "precio1"], 
+    ["Plato 2", "Es un plato muy rico", "precio2"],
+    ["Plato 3", "Es un plato muy rico", "precio3"],
+    ["Plato 4", "Es un plato muy rico", "precio4"],
+  ]
+
   return (
     <div className={style.resInfoContainer}>
       <div className={style.leftContainer}>
@@ -77,10 +85,14 @@ const ResInfo = () => {
             {resInfo && resInfo.petFriendly && <p> Acepta Mascotas </p>}
             {resInfo && resInfo.sells_alcohol && <p> Se puede consumir alcohol </p>}
           </div>
-          
         </div>
+
+        <CommentsComponent comments={["hola mundo", "hola mundo", "hola mundo"]} />
+
       </div>
-      <div className={style.rightContainer}></div>
+      <div className={style.rightContainer}>
+        <h2>Menú</h2>       
+      </div>
     </div>
   )
 }
