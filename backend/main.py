@@ -235,7 +235,7 @@ def search_location(city: str, zone: int):
 @app.get("/get/location/all")
 def get_all_locations():
     aura_response = aura.get_all_location_zones()
-    return aura_response
+    return {"status": 200, "message": "Zonas obtenidas exitosamente", "data": aura_response}
 
 @app.get("/get/parking")
 def search_parking(parking_id: str):
@@ -431,6 +431,23 @@ def dish_ingredient(ingredient_plate: ingredient_plate):
     else:
         return {"status": 200, "message": "Relacion creada exitosamente"}
 
+# admin
+@app.get("/admin/fill/location")
+def fill_location():
+    aura_response = aura.fill_locations()
+    if aura_response == 400:
+        return {"status": 400, "message": "Error llenando la locacion"}
+    else:
+        return {"status": 200, "message": "Locacion llenada exitosamente"}
+    
+@app.delete("/admin/delete/location")
+def delete_location():
+    aura_response = aura.delete_all_locations()
+    if aura_response == 400:
+        return {"status": 400, "message": "Error eliminando la locacion"}
+    else:
+        return {"status": 200, "message": "Locacion eliminada exitosamente"}
+    
 # Para correrlo en local
 if __name__ == "__main__":
     uvicorn.run(app, port=8000)

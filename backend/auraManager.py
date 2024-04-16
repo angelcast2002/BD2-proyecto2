@@ -48,7 +48,7 @@ class AuraNeo4j:
             return 409  # Un usuario con este ID ya existe
 
         create_query = (
-            "MERGE (c:Diner {user_id: $user_id, password: $password, name: $name, "
+            "MERGE (c:User:Diner {user_id: $user_id, password: $password, name: $name, "
             "lastname: $lastname, brithdate: $birthdate, spending: $spending, "
             "has_car: $has_car, image: $image}) "
             "RETURN c"
@@ -70,7 +70,7 @@ class AuraNeo4j:
             return 409  # Un usuario con este ID ya existe
 
         create_query = (
-            "MERGE (c:Restaurant {user_id: $user_id, password: $password, name: $name, "
+            "MERGE (c:User:Restaurant {user_id: $user_id, password: $password, name: $name, "
             "prices: $prices, rating: -1, schedule: $schedule, "
             "sells_alcohol: $sells_alcohol, petFriendly: $petFriendly, imagen: $imagen}) "
             "RETURN c"
@@ -239,13 +239,24 @@ class AuraNeo4j:
         
     @staticmethod
     def _create_visit(tx: Transaction, visit: dict):
-        create_query = (
+        create_visit_query = (
             "MATCH (u:Diner {user_id: $user_id}), (c:Restaurant {user_id: $restaurant_id}) "
             "CREATE (u)-[r:VISITED {dishes: $dishes, total: $total, date: $date, rating: $rating, comment: $comment}]->(c) "
             "RETURN r"
         )
         try:
-            return tx.run(create_query, **visit).single()[0]
+            result = tx.run(create_visit_query, **visit).single()
+
+            # Actualizar el rating del restaurante
+            update_rating_query = (
+                "MATCH (c:Restaurant {user_id: $restaurant_id})<-[r:VISITED]-(:Diner) "
+                "WITH c, AVG(r.rating) AS new_rating "
+                "SET c.rating = new_rating "
+                "RETURN c.rating"
+            )
+            tx.run(update_rating_query, restaurant_id=visit['restaurant_id'])
+
+            return result[0]
         except Exception as e:
             return 400
         
@@ -354,7 +365,8 @@ class AuraNeo4j:
     def _get_all_location_zones(tx: Transaction):
         search_query = (
             "MATCH (l:Location) "
-            "RETURN DISTINCT l.zone AS zone"
+            "RETURN DISTINCT l.zone AS zone "
+            "ORDER BY zone ASC"
         )
         try:
             result = tx.run(search_query)
@@ -556,3 +568,40 @@ class AuraNeo4j:
             return 200
         except Exception as e:
             return 404
+        
+    def fill_locations(self):
+        with self.driver.session() as session:
+            return session.write_transaction(self._fill_locations)
+        
+    @staticmethod
+    def _fill_locations(tx: Transaction):
+        # Crear ubicaciones con zonas de 1 a 25 en guatemala sin el 20, 22 y 23. 1 por zona. el postal_code es la 10 conctatenado con zona
+        create_query = (
+            "UNWIND range(1, 25) AS zone "
+            "WITH zone, CASE WHEN zone > 19 THEN zone + 2 ELSE zone END AS new_zone "
+            "MERGE (l:Location {country: 'Guatemala', city: 'Guatemala', zone: new_zone, is_dangerous: false, postal_code: toInteger('10' + toString(new_zone))}) "
+            "RETURN l"
+        )
+        try:
+            return tx.run(create_query)
+        except Exception as e:
+            return 400
+        
+    def delete_all_locations(self):
+        with self.driver.session() as session:
+            return session.write_transaction(self._delete_all_locations)
+        
+    @staticmethod
+    def _delete_all_locations(tx: Transaction):
+        search_query = (
+            "MATCH (l:Location) "
+            "DETACH DELETE l"
+        )
+        try:
+            tx.run(search_query)
+            return 200
+        except Exception as e:
+            return 404
+
+        
+    
