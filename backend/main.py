@@ -29,8 +29,14 @@ def read_root():
     return {"ANS": "HOLA ANGEL TONOTO"}
 
 @app.get("/user/login")
-def user_login():
-    return {"login": "ok"}
+def user_login(user_id: str, password: str):
+    aura_response = aura.user_login(user_id, password)
+    if aura_response == 404:
+        return {"status": 404, "message": "El usuario no existe"}
+    elif aura_response == 400:
+        return {"status": 400, "message": "Error obteniendo el usuario"}
+    else:
+        return {"status": 200, "message": "Login exitoso", "role": aura_response[0]}
 
 class UserDiner(BaseModel):
     user_id: str
@@ -67,8 +73,6 @@ class UserRestaurante(BaseModel):
 
 @app.post("/user/signup/restaurant")
 def restaurant_signup(userRestaurant: UserRestaurante):
-    #mandar el rating como NA
-    userRestaurant.rating = "NA"
     aura_response = aura.create_restaurant(userRestaurant.model_dump())
     if aura_response == 409:
         return {"status": 409, "message": "Restaurante ya existe"}

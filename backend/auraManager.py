@@ -14,6 +14,23 @@ class AuraNeo4j:
 
     def close(self):
         self.driver.close()
+
+    def user_login(self, user_id: str, password: str):
+        with self.driver.session() as session:
+            return session.read_transaction(self._user_login, user_id, password)
+        
+    @staticmethod
+    def _user_login(tx: Transaction, user_id: str, password: str):
+        # buscar en el nodo Diner o Restaurant si el usuario y contraseña coinciden. Retornar el nombre del nodo como rol
+        search_query = (
+            "MATCH (c) WHERE c.user_id = $user_id AND c.password = $password "
+            "RETURN labels(c)[0] AS role"
+        )
+        try:
+            return tx.run(search_query, user_id=user_id, password=password).single()
+        except Exception as e:
+            return 404
+            
     
     def search_user(self, user_id: str):
         with self.driver.session() as session:
@@ -54,7 +71,7 @@ class AuraNeo4j:
 
         create_query = (
             "MERGE (c:Restaurant {user_id: $user_id, password: $password, name: $name, "
-            "prices: $prices, rating: $rating, schedule: $schedule, "
+            "prices: $prices, rating: -1, schedule: $schedule, "
             "sells_alcohol: $sells_alcohol, petFriendly: $petFriendly, imagen: $imagen}) "
             "RETURN c"
         )
@@ -289,7 +306,7 @@ class AuraNeo4j:
     @staticmethod
     def _restaurant_sells(tx: Transaction, relationship: dict):
         search_query = (
-            "MATCH (r:Restaurant {user_id: $restaurant_id}), (d:Dish {name: $dish_name}) "
+            "MATCH (r:Restaurant {user_id: $restaurant_id}), (d:Dish {name: $dish_id}) "
             "CREATE (r)-[s:SELLS {price: $price, sell_time: $sell_time, cost: $cost}]->(d) "
             "RETURN s"
         )
