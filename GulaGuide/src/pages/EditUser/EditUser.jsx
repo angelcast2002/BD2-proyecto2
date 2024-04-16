@@ -11,7 +11,8 @@ const EditUser = () => {
 
     const [name, setName] = useState(user.name)
     const [email, setEmail] = useState(user.email)
-    const [password, setPassword] = useState(user.password)
+    const [lastname, setLastname] = useState(user.lastname)
+    const [budget, setBudget] = useState(user.budget)
     const [pfp, setPfp] = useState(user.pfp)
 
     const handleInputsValues = (e) => {
@@ -51,7 +52,24 @@ const EditUser = () => {
                                 onChange={handleInputsValues}
                             />
                         </div>
-                        <div className={style.}></div>
+                        <div className={style.lastnameContainer}>
+                            <span>Apellido</span>
+                            <ComponentInput
+                                name={lastname}
+                                type={"text"}
+                                placeholder={lastname}
+                                onChange={handleInputsValues}
+                            />
+                        </div>
+                        <div className={style.budgetContainer}>
+                            <span>Presupuesto</span>
+                            <ComponentInput
+                                name={budget}
+                                type={"text"}
+                                placeholder={budget}
+                                onChange={handleInputsValues}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
