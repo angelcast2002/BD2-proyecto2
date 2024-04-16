@@ -111,3 +111,12 @@
     align-items: center;
 
 }
+
+.buttonContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px 0;
+    height: calc(100% - 10px);
+    gap: 40px;
+  }
