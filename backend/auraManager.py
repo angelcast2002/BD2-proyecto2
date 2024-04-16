@@ -26,9 +26,9 @@ class AuraNeo4j:
             "MATCH (c) WHERE c.user_id = $user_id AND c.password = $password "
             "RETURN labels(c)[0] AS role"
         )
-        try:
+        if tx.run(search_query, user_id=user_id, password=password).single() is not None:
             return tx.run(search_query, user_id=user_id, password=password).single()
-        except Exception as e:
+        else:
             return 404
             
     
@@ -249,8 +249,41 @@ class AuraNeo4j:
             return tx.run(create_query, **visit).single()[0]
         except Exception as e:
             return 400
-    # buscar la relacion entre restaurante y plato llamada sells con propiedades: price, sell_time and cost. si existe, retornar
     # la lista de platos que vende el restaurante
+        
+        # crear la relacion entre diner y location llamada lives_in con las propiedades street, avenue, number, community, reference. el id de la locacion es la zone
+    def diner_lives_in(self, relationship: dict):
+        with self.driver.session() as session:
+            return session.write_transaction(self._diner_lives_in, relationship)
+        
+    @staticmethod
+    def _diner_lives_in(tx: Transaction, relationship: dict):
+        search_query = (
+            "MATCH (d:Diner {user_id: $diner_id}), (l:Location {zone: $zone}) "
+            "MERGE (d)-[li:LIVES_IN {street: $street, avenue: $avenue, number: $number, community: $community, reference: $reference}]->(l) "
+            "RETURN li"
+        )
+        try:
+            return tx.run(search_query, **relationship).single()[0]
+        except Exception as e:
+            return 400
+        
+    # Crear relacion entre restaurante y location llamada located_in con propiedades: street, avenue, number, community, reference
+    def restaurant_located_in(self, relationship: dict):
+        with self.driver.session() as session:
+            return session.write_transaction(self._restaurant_located_in, relationship)
+        
+    @staticmethod
+    def _restaurant_located_in(tx: Transaction, relationship: dict):
+        search_query = (
+            "MATCH (r:Restaurant {user_id: $restaurant_id}), (l:Location {zone: $zone}) "
+            "MERGE (r)-[li:LOCATED_IN {street: $street, avenue: $avenue, number: $number, community: $community, reference: $reference}]->(l) "
+            "RETURN li"
+        )
+        try:
+            return tx.run(search_query, **relationship).single()[0]
+        except Exception as e:
+            return 400
 
     def search_sells_relationship(self, restaurant_id: str):
         with self.driver.session() as session:
@@ -314,3 +347,20 @@ class AuraNeo4j:
             return tx.run(search_query, **relationship).single()[0]
         except Exception as e:
             return 400
+        
+    def get_all_location_zones(self):
+        with self.driver.session() as session:
+            return session.read_transaction(self._get_all_location_zones)
+
+    @staticmethod
+    def _get_all_location_zones(tx: Transaction):
+        search_query = (
+            "MATCH (l:Location) "
+            "RETURN DISTINCT l.zone AS zone"
+        )
+        try:
+            result = tx.run(search_query)
+            return [record["zone"] for record in result]
+        except Exception as e:
+            return None
+

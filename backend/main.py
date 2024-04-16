@@ -32,9 +32,7 @@ def read_root():
 def user_login(user_id: str, password: str):
     aura_response = aura.user_login(user_id, password)
     if aura_response == 404:
-        return {"status": 404, "message": "El usuario no existe"}
-    elif aura_response == 400:
-        return {"status": 400, "message": "Error obteniendo el usuario"}
+        return {"status": 404, "message": "Credenciales incorrectas"}
     else:
         return {"status": 200, "message": "Login exitoso", "role": aura_response[0]}
 
@@ -253,8 +251,46 @@ def get_dishes(restaurant_id: str):
         return {"status": 404, "message": "El restaurante no existe"}
     else:
         return aura_response
-    
 
+@app.get("/get/location/all")
+def get_all_locations():
+    aura_response = aura.get_all_location_zones()
+    return aura_response
+
+class DinerLocation(BaseModel):
+    diner_id: str
+    street: str
+    avenue: str
+    number: str
+    community: str
+    reference: str
+    zone: int
+
+@app.post("/diner/location")
+def diner_location(dinerLocation: DinerLocation):
+    aura_response = aura.diner_lives_in(dinerLocation.model_dump())
+    if aura_response == 400:
+        return {"status": 400, "message": f"Error creando la locacion"}
+    else:
+        return {"status": 200, "message": "Locacion creada exitosamente"}
+
+class RestaurantLocation(BaseModel):
+    restaurant_id: str
+    street: str
+    avenue: str
+    number: str
+    community: str
+    reference: str
+    zone: int
+
+@app.post("/restaurant/location")
+def restaurant_location(restaurantLocation: RestaurantLocation):
+    aura_response = aura.restaurant_located_in(restaurantLocation.model_dump())
+    if aura_response == 400:
+        return {"status": 400, "message": f"Error creando la locacion"}
+    else:
+        return {"status": 200, "message": "Locacion creada exitosamente"}
+    
 # Para correrlo en local
 if __name__ == "__main__":
     uvicorn.run(app, port=8000)
