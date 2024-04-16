@@ -476,3 +476,51 @@ class AuraNeo4j:
             return tx.run(search_query, **relationship).single()[0]
         except Exception as e:
             return 400
+        
+    def get_user_info(self, user_id: str):
+        with self.driver.session() as session:
+            return session.read_transaction(self._get_user_info, user_id)
+        
+    @staticmethod
+    def _get_user_info(tx: Transaction, user_id: str):
+        search_query = (
+            "MATCH (u) WHERE u.user_id = $user_id "
+            "RETURN u"
+        )
+        try:
+            return tx.run(search_query, user_id=user_id).single()[0]
+        except Exception as e:
+            return 404
+        
+    def update_user_info(self, user_id: str, new_info: dict):
+        with self.driver.session() as session:
+            return session.write_transaction(self._update_user_info, user_id, new_info)
+        
+    @staticmethod
+    def _update_user_info(tx: Transaction, user_id: str, new_info: dict):
+        search_query = (
+            "MATCH (u) WHERE u.user_id = $user_id "
+            "SET u += $new_info "
+            "RETURN u"
+        )
+        try:
+            return tx.run(search_query, user_id=user_id, new_info=new_info).single()[0]
+        except Exception as e:
+            return 404
+        
+    def delete_user(self, user_id: str):
+        with self.driver.session() as session:
+            return session.write_transaction(self._delete_user, user_id)
+        
+    @staticmethod
+    def _delete_user(tx: Transaction, user_id: str):
+        search_query = (
+            "MATCH (u) WHERE u.user_id = $user_id "
+            "DETACH DELETE u"
+        )
+        try:
+            tx.run(search_query, user_id=user_id)
+            return 200
+        except Exception as e:
+            return 404
+

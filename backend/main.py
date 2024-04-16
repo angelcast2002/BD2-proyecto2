@@ -35,6 +35,14 @@ def user_login(user_id: str, password: str):
         return {"status": 404, "message": "Credenciales incorrectas"}
     else:
         return {"status": 200, "message": "Login exitoso", "role": aura_response[0]}
+    
+@app.get("/user/get")
+def get_user(user_id: str):
+    aura_response = aura.get_user_info(user_id)
+    if aura_response == 404:
+        return {"status": 404, "message": "Usuario no existe"}
+    else:
+        return aura_response
 
 class UserDiner(BaseModel):
     user_id: str
@@ -79,6 +87,40 @@ def restaurant_signup(userRestaurant: UserRestaurante):
     else:
         return {"status": 200, "message": "Restaurante creado exitosamente"}
 
+class updateDiner(BaseModel):
+    name: str
+    lastname: str
+    spending: float
+    has_car: bool
+    image: str
+
+class updateRestaurant(BaseModel):
+    name: str
+    prices : str
+    schedule: str
+    sells_alcohol: bool
+    petFriendly: bool
+    imagen: str
+
+@app.put("/user/update")
+def update_user(user_id: str, user: Union[updateDiner, updateRestaurant]):
+    aura_response = aura.update_user_info(user_id, user.model_dump())
+    if aura_response == 404:
+        return {"status": 404, "message": "Usuario no existe"}
+    elif aura_response == 400:
+        return {"status": 400, "message": "Error actualizando el usuario"}
+    else:
+        return {"status": 200, "message": "Usuario actualizado exitosamente"}
+    
+@app.delete("/user/delete")
+def delete_user(user_id: str):
+    aura_response = aura.delete_user(user_id)
+    if aura_response == 404:
+        return {"status": 404, "message": "Usuario no existe"}
+    elif aura_response == 400:
+        return {"status": 400, "message": "Error eliminando el usuario"}
+    else:
+        return {"status": 200, "message": "Usuario eliminado exitosamente"}
 
 class Location(BaseModel):
     country: str
