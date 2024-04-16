@@ -249,7 +249,6 @@ class AuraNeo4j:
             return tx.run(create_query, **visit).single()[0]
         except Exception as e:
             return 400
-    # la lista de platos que vende el restaurante
         
         # crear la relacion entre diner y location llamada lives_in con las propiedades street, avenue, number, community, reference. el id de la locacion es la zone
     def diner_lives_in(self, relationship: dict):
