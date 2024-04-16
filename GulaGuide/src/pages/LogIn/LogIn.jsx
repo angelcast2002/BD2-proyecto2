@@ -6,9 +6,13 @@ import styles from "./LogIn.module.css"
 import Popup from "../../components/Popup/Popup"
 import API_URL from "../../api"
 import { useStoreon } from "storeon/react"
+import useApi from "../../Hooks/useApi"
+import { set } from "date-fns"
 
 const LogIn = () => {
   const { dispatch } = useStoreon("user")
+
+  const api = useApi()
 
   const [emailInput, setEmailInput] = useState("")
   const [passInput, setPassInput] = useState("")
@@ -23,40 +27,39 @@ const LogIn = () => {
       usuario: emailInput,
       contra: passInput,
     }
-    const response = await fetch(`${API_URL}/api/login`, {
-      method: "POST",
-      body: JSON.stringify(body),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
 
-    const datos = await response.json() // Recibidos
+    let response
+    response = await api.handleRequest(
+      "GET",
+      "user/login?user_id=" + emailInput + "&password=" + passInput
+    )
+
+    const datos = await response // Recibidos
+
+    console.log("datos.data ->", datos.role)
 
     if (datos.status === 200) {
-      // Estado global
-      const { token, role } = datos.data
-      dispatch("user/config", {
-        token,
-        role,
-        id_user: emailInput,
-      })
-      if (role === "student") {
-        navigate("/profile")
-      } else if (role === "enterprise") {
-        navigate("/postulacionempresa")
-      } else if (role === "admin") {
-        navigate("/profileadmin")
-      }
-    } else if (datos.status === 403) {
+      dispatch("user/config",
+        {
+          role: datos.role,
+          id_user: emailInput
+        }
+      )
+      
+      setError("Sesión iniciada correctamente")
+      setTypeError(3)
+      setWarning(true)
+    } else if (datos.status === 400) {
+      setError(datos.message)
       setTypeError(1)
-      setError("Cuenta deshabilitada. Contacte al administrador")
       setWarning(true)
     } else {
+      setError("Error de servidor")
       setTypeError(1)
-      setError("Credenciales incorrectas. Inténtelo de nuevo")
       setWarning(true)
     }
+
+
   }
 
   const handleCorreo = (event) => {

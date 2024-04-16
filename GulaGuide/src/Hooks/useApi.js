@@ -23,6 +23,7 @@ const useApi = () => {
     
     // console.info("API CALLL:", `${API_URL}/api${path}`, options)
     setLoading(true)
+    console.log("->: ", path )
     const response = await fetch(`${API_URL}${path}`, options)
     const datos = await response.json() // Recibidos
     console.log("API RESPONSE:", datos)
