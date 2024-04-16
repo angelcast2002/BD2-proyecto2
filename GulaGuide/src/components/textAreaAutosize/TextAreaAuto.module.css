@@ -1,0 +1,39 @@
+.inputContainer {
+  font-family: Arial;
+  font-size: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  user-select: none;
+  max-height: 150px;
+  width: 100%;
+}
+
+.textArea {
+  padding: 10px 5px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #000;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  resize: none;
+}
+
+.textArea:focus {
+  border-color: #a08ae5;
+  box-shadow: 0 0 0 3px rgba(160, 138, 229, 0.25);
+  outline: none;
+  overflow: auto; /* Habilita el desplazamiento */
+  scrollbar-width: thin; /* Ancho del scrollbar */
+  scrollbar-color: transparent transparent; /* Color del thumb y del track */
+}
+
+.textArea::-webkit-scrollbar {
+  width: 0; /* Ancho del scrollbar (en navegadores webkit) */
+  height: 0; /* Altura del scrollbar (en navegadores webkit) */
+}

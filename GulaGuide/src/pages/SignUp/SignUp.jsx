@@ -142,7 +142,7 @@ const SignUp = () => {
         setWarning(true)
         setTimeout(() => {
           setIsLoading(false)
-          navigate("/")
+          navigate("/setsettings")
         }, 5000)
       } else if (data.status === 404) {
         setError(data.message)

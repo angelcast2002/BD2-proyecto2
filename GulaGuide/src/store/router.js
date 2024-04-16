@@ -5,4 +5,6 @@ export default createRouter([
   ["/login", () => ({ page: "login" })],
   ["/signup", () => ({ page: "signup" })],
   ["/edituser", () => ({ page: "edituser" })],
+  ["/recommendations", () => ({ page: "recommendations" })],
+  ["/setsettings", () => ({ page: "setsettings" })],
 ])
