@@ -96,11 +96,7 @@ const SignUp = () => {
   }
 
   const handleSignUp = async () => {
-    if (
-      nombres === "" ||
-      email === "" ||
-      passWord === ""
-    ) {
+    if (nombres === "" || email === "" || passWord === "") {
       setError("Los campos nombres, correo y contraseña son obligatorios")
       setTypeError(2)
       setWarning(true)
