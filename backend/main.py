@@ -28,6 +28,7 @@ aura = AuraNeo4j()
 def read_root():
     return {"ANS": "HOLA ANGEL TONOTO"}
 
+# User
 @app.get("/user/login")
 def user_login(user_id: str, password: str):
     aura_response = aura.user_login(user_id, password)
@@ -129,6 +130,8 @@ class Location(BaseModel):
     is_dangerous: bool
     postal_code: int
 
+# Creation
+
 @app.post("/creation/location")
 def create_location(location: Location):
     aura_response = aura.create_location(location.model_dump())
@@ -192,6 +195,7 @@ def create_parking(parking: Parking):
     else:
         return {"status": 200, "message": "Parqueadero creado exitosamente"}
     
+# Search
 
 @app.get("/get/restaurant")
 def search_restaurant(restaurant_id: str):
@@ -228,6 +232,10 @@ def search_location(city: str, zone: int):
     else:
         return aura_response
     
+@app.get("/get/location/all")
+def get_all_locations():
+    aura_response = aura.get_all_location_zones()
+    return aura_response
 
 @app.get("/get/parking")
 def search_parking(parking_id: str):
@@ -237,6 +245,27 @@ def search_parking(parking_id: str):
     else:
         return aura_response
 
+@app.get("/get/ingredientsAll")
+def get_all_ingredients():
+    aura_response = aura.get_all_ingredients()
+    return {"status": 200, "message": "Ingredientes obtenidos exitosamente", "data": aura_response}
+
+@app.get("/get/dishesAll")
+def get_all_dishes():
+    aura_response = aura.get_all_dishes()
+    return {"status": 200, "message": "Platos obtenidos exitosamente", "data": aura_response}
+
+@app.get("/get/restaurantsAll")
+def get_all_restaurants():
+    aura_response = aura.get_all_restaurants()
+    return {"status": 200, "message": "Restaurantes obtenidos exitosamente", "data": aura_response}
+
+@app.get("/get/parkingsAll")
+def get_all_parkings():
+    aura_response = aura.get_all_parkings()
+    return {"status": 200, "message": "Parqueaderos obtenidos exitosamente", "data": aura_response}
+
+# Diner
 
 class visito(BaseModel):
     user_id: str
@@ -271,6 +300,33 @@ def diner_on_restaurant(diner_on_restaurant: diner_on_restaurant):
     else:
         return {"status": 200, "message": "Relacion creada exitosamente"}
 
+class DinerLocation(BaseModel):
+    diner_id: str
+    street: str
+    avenue: str
+    number: str
+    community: str
+    reference: str
+    zone: int
+
+@app.post("/diner/location")
+def diner_location(dinerLocation: DinerLocation):
+    aura_response = aura.diner_lives_in(dinerLocation.model_dump())
+    if aura_response == 400:
+        return {"status": 400, "message": "Error creando la locacion"}
+    else:
+        return {"status": 200, "message": "Locacion creada exitosamente"}
+    
+@app.delete("/diner/visit")
+def delete_diner_on_restaurant(diner_id: str, restaurant_id: str):
+    aura_response = aura.delete_diner_visit(diner_id, restaurant_id)
+    if aura_response == 404:
+        return {"status": 404, "message": "La relacion no existe"}
+    else:
+        return {"status": 200, "message": "Relacion eliminada exitosamente"}
+    
+# Restaurant
+
 class restaurant_sells(BaseModel):
     restaurant_id: str
     dish_id: str
@@ -294,28 +350,6 @@ def get_dishes(restaurant_id: str):
     else:
         return aura_response
 
-@app.get("/get/location/all")
-def get_all_locations():
-    aura_response = aura.get_all_location_zones()
-    return aura_response
-
-class DinerLocation(BaseModel):
-    diner_id: str
-    street: str
-    avenue: str
-    number: str
-    community: str
-    reference: str
-    zone: int
-
-@app.post("/diner/location")
-def diner_location(dinerLocation: DinerLocation):
-    aura_response = aura.diner_lives_in(dinerLocation.model_dump())
-    if aura_response == 400:
-        return {"status": 400, "message": f"Error creando la locacion"}
-    else:
-        return {"status": 200, "message": "Locacion creada exitosamente"}
-
 class RestaurantLocation(BaseModel):
     restaurant_id: str
     street: str
@@ -333,41 +367,6 @@ def restaurant_location(restaurantLocation: RestaurantLocation):
     else:
         return {"status": 200, "message": "Locacion creada exitosamente"}
     
-@app.get("/get/ingredientsAll")
-def get_all_ingredients():
-    aura_response = aura.get_all_ingredients()
-    return {"status": 200, "message": "Ingredientes obtenidos exitosamente", "data": aura_response}
-
-@app.get("/get/dishesAll")
-def get_all_dishes():
-    aura_response = aura.get_all_dishes()
-    return {"status": 200, "message": "Platos obtenidos exitosamente", "data": aura_response}
-
-@app.get("/get/restaurantsAll")
-def get_all_restaurants():
-    aura_response = aura.get_all_restaurants()
-    return {"status": 200, "message": "Restaurantes obtenidos exitosamente", "data": aura_response}
-
-@app.get("/get/parkingsAll")
-def get_all_parkings():
-    aura_response = aura.get_all_parkings()
-    return {"status": 200, "message": "Parqueaderos obtenidos exitosamente", "data": aura_response}
-
-class dish_opinion(BaseModel):
-    dish_id: str
-    diner_id: str
-    favorite: bool
-    likes: bool
-    comment: str
-
-@app.post("/dish/opinion")
-def dish_opinion(dish_opinion: dish_opinion):
-    aura_response = aura.diner_opinion(dish_opinion.model_dump())
-    if aura_response == 400:
-        return {"status": 400, "message": "Error creando la opinion"}
-    else:
-        return {"status": 200, "message": "Opinion creada exitosamente"}
-
 class restaurant_parking(BaseModel):
     restaurant_id: str
     parking_id: str
@@ -398,6 +397,24 @@ def restaurant_delivery(delivery: restaurantDelivery):
     else:
         return {"status": 200, "message": "Delivery creado exitosamente"}
 
+class dish_opinion(BaseModel):
+    dish_id: str
+    diner_id: str
+    favorite: bool
+    likes: bool
+    comment: str
+
+# Dish
+
+@app.post("/dish/opinion")
+def dish_opinion(dish_opinion: dish_opinion):
+    aura_response = aura.diner_opinion(dish_opinion.model_dump())
+    if aura_response == 400:
+        return {"status": 400, "message": "Error creando la opinion"}
+    else:
+        return {"status": 200, "message": "Opinion creada exitosamente"}
+
+
 
 class ingredient_plate(BaseModel):
     ingredient_id: str
@@ -413,16 +430,6 @@ def dish_ingredient(ingredient_plate: ingredient_plate):
         return {"status": 400, "message": "Error creando la relacion"}
     else:
         return {"status": 200, "message": "Relacion creada exitosamente"}
-
-
-@app.delete("/diner/visit")
-def delete_diner_on_restaurant(diner_id: str, restaurant_id: str):
-    aura_response = aura.delete_diner_visit(diner_id, restaurant_id)
-    if aura_response == 404:
-        return {"status": 404, "message": "La relacion no existe"}
-    else:
-        return {"status": 200, "message": "Relacion eliminada exitosamente"}
-    
 
 # Para correrlo en local
 if __name__ == "__main__":
