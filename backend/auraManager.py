@@ -443,3 +443,36 @@ class AuraNeo4j:
             return tx.run(search_query, **relationship).single()[0]
         except Exception as e:
             return 400
+        
+    def get_all_parkings(self):
+        with self.driver.session() as session:
+            return session.read_transaction(self._get_all_parkings)
+        
+    @staticmethod
+    def _get_all_parkings(tx: Transaction):
+        search_query = (
+            "MATCH (p:Parking) "
+            "RETURN p.parking_id AS parking_id"
+        )
+        try:
+            result = tx.run(search_query)
+            return [record["parking_id"] for record in result]
+        except Exception as e:
+            return None
+        
+    # crear relacion entre restaurante y location llamada has_delivery con propiedades: price, time, own_delivery
+    def restaurant_has_delivery(self, relationship: dict):
+        with self.driver.session() as session:
+            return session.write_transaction(self._restaurant_has_delivery, relationship)   
+        
+    @staticmethod
+    def _restaurant_has_delivery(tx: Transaction, relationship: dict):
+        search_query = (
+            "MATCH (r:Restaurant {user_id: $restaurant_id}), (l:Location {zone: $zone}) "
+            "MERGE (r)-[hd:HAS_DELIVERY {price: $price, time: $time, own_delivery: $own_delivery}]->(l) "
+            "RETURN hd"
+        )
+        try:
+            return tx.run(search_query, **relationship).single()[0]
+        except Exception as e:
+            return 400

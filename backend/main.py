@@ -306,6 +306,11 @@ def get_all_restaurants():
     aura_response = aura.get_all_restaurants()
     return {"status": 200, "message": "Restaurantes obtenidos exitosamente", "data": aura_response}
 
+@app.get("/get/parkingsAll")
+def get_all_parkings():
+    aura_response = aura.get_all_parkings()
+    return {"status": 200, "message": "Parqueaderos obtenidos exitosamente", "data": aura_response}
+
 class dish_opinion(BaseModel):
     dish_id: str
     diner_id: str
@@ -335,7 +340,22 @@ def restaurant_parking(restaurant_parking: restaurant_parking):
         return {"status": 400, "message": "Error creando la relacion"}
     else:
         return {"status": 200, "message": "Relacion creada exitosamente"}
-    
+
+class restaurantDelivery(BaseModel):
+    restaurant_id: str
+    zone: int
+    price: float
+    time: str
+    own_delivery: bool
+
+@app.post("/restaurant/delivery")
+def restaurant_delivery(delivery: restaurantDelivery):
+    aura_response = aura.restaurant_has_delivery(delivery.model_dump())
+    if aura_response == 400:
+        return {"status": 400, "message": "Error creando la relacion"}
+    else:
+        return {"status": 200, "message": "Delivery creado exitosamente"}
+
 
 # Para correrlo en local
 if __name__ == "__main__":
