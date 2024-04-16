@@ -66,3 +66,48 @@
     text-align: start;
 }
 
+.budgetContainer{
+    text-align: start;
+}
+
+.hasCartContainer{
+    text-align: start;
+}
+
+.urlContainer{
+    text-align: start;
+}
+
+.dataGroup2Container{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.priceRangeContainer{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items:center;
+    gap: 5px;
+}
+
+
+.priceRangeContainerInt {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.checkboxContainer{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+
+}
