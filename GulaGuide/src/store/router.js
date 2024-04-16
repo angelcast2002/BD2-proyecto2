@@ -7,4 +7,6 @@ export default createRouter([
   ["/edituser", () => ({ page: "edituser" })],
   ["/recommendations", () => ({ page: "recommendations" })],
   ["/setsettings", () => ({ page: "setsettings" })],
+  ["/resinfo", () => ({ page: "resinfo" })],
 ])
+

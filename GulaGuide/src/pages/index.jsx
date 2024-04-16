@@ -7,6 +7,7 @@ import SignUp from "./SignUp/SignUp"
 import EditUser from "./EditUser/EditUser"
 import Recommendations from "./Recommendations/Recommendations"
 import SetSettings from "./SetSettings/SetSettings"
+import ResInfo from "./ResInfo/ResInfo"
 
 const Page = () => {
   const { [routerKey]: route } = useStoreon(routerKey)
@@ -30,6 +31,9 @@ const Page = () => {
       break
     case "setsettings":
       Component = <SetSettings />
+      break
+    case "resinfo":
+      Component = <ResInfo />
       break
     default:
       Component = <h1>404 Error</h1>
