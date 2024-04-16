@@ -108,6 +108,7 @@ const SignUp = () => {
           password: passWord,
           name: nombres,
           prices: (minimo + "-" + maximo).toString(),
+          rating: 0,
           schedule: (apertura + "-" + cierre).toString(),
           sells_alcohol: alcohol,
           petFriendly: pet,
