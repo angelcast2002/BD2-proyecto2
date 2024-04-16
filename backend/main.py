@@ -399,6 +399,31 @@ def restaurant_delivery(delivery: restaurantDelivery):
         return {"status": 200, "message": "Delivery creado exitosamente"}
 
 
+class ingredient_plate(BaseModel):
+    ingredient_id: str
+    dish_id: str
+    quantity: float
+    cook_method: str
+    cook_time: str
+
+@app.post("/dish/ingredient")
+def dish_ingredient(ingredient_plate: ingredient_plate):
+    aura_response = aura.dish_has_ingredient(ingredient_plate.model_dump())
+    if aura_response == 400:
+        return {"status": 400, "message": "Error creando la relacion"}
+    else:
+        return {"status": 200, "message": "Relacion creada exitosamente"}
+
+
+@app.delete("/diner/visit")
+def delete_diner_on_restaurant(diner_id: str, restaurant_id: str):
+    aura_response = aura.delete_diner_visit(diner_id, restaurant_id)
+    if aura_response == 404:
+        return {"status": 404, "message": "La relacion no existe"}
+    else:
+        return {"status": 200, "message": "Relacion eliminada exitosamente"}
+    
+
 # Para correrlo en local
 if __name__ == "__main__":
     uvicorn.run(app, port=8000)

@@ -523,4 +523,36 @@ class AuraNeo4j:
             return 200
         except Exception as e:
             return 404
+        
+    # crear relacion entre ingrediente y plato llamada has_ingredient con propiedades: quantity, cook_method, cook_time
+    def dish_has_ingredient(self, relationship: dict):
+        with self.driver.session() as session:
+            return session.write_transaction(self._dish_has_ingredient, relationship)
+        
+    @staticmethod
+    def _dish_has_ingredient(tx: Transaction, relationship: dict):
+        search_query = (
+            "MATCH (d:Dish {name: $dish_id}), (i:Ingredient {name: $ingredient_id}) "
+            "MERGE (i)-[hi:USED_IN {quantity: $quantity, cook_method: $cook_method, cook_time: $cook_time}]->(d) "
+            "RETURN hi"
+        )
+        try:
+            return tx.run(search_query, **relationship).single()[0]
+        except Exception as e:
+            return 400
 
+    def delete_diner_visit(self, user_id: str, restaurant_id: str):
+        with self.driver.session() as session:
+            return session.write_transaction(self._delete_diner_visit, user_id, restaurant_id)
+        
+    @staticmethod
+    def _delete_diner_visit(tx: Transaction, user_id: str, restaurant_id: str):
+        search_query = (
+            "MATCH (d:Diner {user_id: $user_id})-[v:VISITED]->(r:Restaurant {user_id: $restaurant_id}) "
+            "DELETE v"
+        )
+        try:
+            tx.run(search_query, user_id=user_id, restaurant_id=restaurant_id)
+            return 200
+        except Exception as e:
+            return 404
