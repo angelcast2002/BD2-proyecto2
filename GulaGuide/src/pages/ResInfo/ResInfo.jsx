@@ -130,6 +130,10 @@ const ResInfo = ({ id }) => {
     }
   }
 
+  const handleMenuItemClick = (id) => {
+    navigate(`/dinerondish/${id}`)
+  }
+
   return (
     <div className={style.mainContainer}>
       <Header />
@@ -203,6 +207,7 @@ const ResInfo = ({ id }) => {
                     name={item.name}
                     description={item.description}
                     avg_price={"Q." + item.avg_price + ".00"}
+                    onClick={() => handleMenuItemClick(item.name)}
                   />
                 )
               })}

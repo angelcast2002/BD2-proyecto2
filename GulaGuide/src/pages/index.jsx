@@ -12,6 +12,7 @@ import DishInfo from "./DishInfo/DishInfo"
 import AddVisit from "./AddVisit/AddVisit"
 import AddDish from "./AddDish/AddDish"
 import AddParking from "./AddParking/AddParking"
+import DinerOnDish from "./DinerOnDish/DinerOnDish"
 
 const Page = () => {
   const { [routerKey]: route } = useStoreon(routerKey)
@@ -50,6 +51,9 @@ const Page = () => {
       break
     case "addparking":
       Component = <AddParking />
+      break
+    case "dinerondish":
+      Component = <DinerOnDish id={route.match.props.id}/>
       break
     default:
       Component = <h1>404 Error</h1>

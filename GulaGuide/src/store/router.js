@@ -12,4 +12,5 @@ export default createRouter([
   ["/addvisit/*", (restaurant_id) => ({ page: "addvisit", props: { restaurant_id }})],
   ["/adddish", () => ({ page: "adddish" })],
   ["/addparking", () => ({ page: "addparking" })],
+  ["/dinerondish/*", (id) => ({ page: "dinerondish", props: { id }})],
 ])
