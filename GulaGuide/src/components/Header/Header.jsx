@@ -15,7 +15,7 @@ export const Header = () => {
   return (
     <div className={style.mainContainer}>
       <div className={style.actions}>
-        <a href="/editprofile">Perfil</a>
+        <a href="/edituser">Perfil</a>
         <a href="/recommendations" style={role === "diner" ? {display: 'none'} : {}}>Recomendaciones</a>
         <a href="/createnodes" style={role === "diner" ? {} : {display: 'none'}}>Crear entidades</a>
       </div>

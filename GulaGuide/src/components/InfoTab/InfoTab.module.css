@@ -7,7 +7,7 @@
     margin-bottom: 20px;
     padding: 20px;
     box-sizing: border-box;
-    width: calc(100%/3 - 20px);
+    width: calc(100%/2 - 20px);
     transition: all 0.3s ease;
     cursor: pointer;
     gap: 20px;
@@ -36,7 +36,7 @@
 }
 
 .imageContainer img {
-    width: 80%;
+    max-height: 150px;
     border-radius: 10px;
 }
 
@@ -50,7 +50,7 @@
 }
 
 .infoContainer p {
-    font-size: 1rem;
+    font-size: 1.5rem;
 }
 
 @media screen and (max-width: 768px) {
