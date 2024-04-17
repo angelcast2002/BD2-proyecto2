@@ -477,8 +477,8 @@ def delete_location():
         return {"status": 200, "message": "Locacion eliminada exitosamente"}
     
 @app.get("/diner/recommend")
-def recommend_dishes(user_id: str):
-    aura_response = sistema_recomendacion(user_id)
+def recommend_dishes(user_id: str, limit: int):
+    aura_response = sistema_recomendacion(user_id, limit)
     if aura_response == 404:
         return {"status": 404, "message": "El usuario no existe"}
     elif aura_response == 400:

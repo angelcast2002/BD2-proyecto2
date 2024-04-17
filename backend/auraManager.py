@@ -1,3 +1,4 @@
+import random
 from neo4j import GraphDatabase, Transaction
 
 link = "neo4j+s://9b98ec60.databases.neo4j.io"
@@ -313,6 +314,25 @@ class AuraNeo4j:
         except Exception as e:
             return 400
 
+    def search_restaurant_zone(self, restaurant_id: str):
+        with self.driver.session() as session:
+            return session.read_transaction(self._search_restaurant_zone, restaurant_id)
+        
+    @staticmethod
+    def _search_restaurant_zone(tx: Transaction, restaurant_id: str):
+        search_query = (
+            "MATCH (r:Restaurant {user_id: $restaurant_id})-[li:LOCATED_IN]->(l:Location) "
+            "RETURN l.zone AS zone"
+        )
+        try:
+            response = tx.run(search_query, restaurant_id=restaurant_id).single()
+            if response is not None:
+                return response[0]
+            else:
+                return 404
+        except Exception as e:
+            return 400
+        
     def search_sells_relationship(self, restaurant_id: str):
         with self.driver.session() as session:
             return session.read_transaction(self._search_sells_relationship, restaurant_id)
@@ -825,7 +845,7 @@ class AuraNeo4j:
             return None
         
         
-def sistema_recomendacion(user_id: str):
+def sistema_recomendacion(user_id: str, limit: int = 20):
     aura = AuraNeo4j()
 
     # verificar si el usuario existe
@@ -876,21 +896,46 @@ def sistema_recomendacion(user_id: str):
         recommendations = {restaurant: recommendations.count(restaurant) for restaurant in recommendations}
         recommendations = dict(sorted(recommendations.items(), key=lambda item: item[1], reverse=True))
         
-        #tomar las primeras 20 recomendaciones
-        recommendations = list(recommendations.keys())[:20]
+        # tomar las primeras 20 recomendaciones
+        recommendations = list(recommendations.keys())[:limit]
 
         # obtener la informacion de los restaurantes recomendados
         recommended_restaurants = []
         for restaurant_id in recommendations:
             restaurant = aura.get_user_info(restaurant_id)
+            location = aura.search_restaurant_zone(restaurant_id)  
+            restaurant = dict(restaurant) 
+            if location == 404:
+                location = ""
+                restaurant['location'] = location
+            else:
+                restaurant['location'] = location
             recommended_restaurants.append(restaurant)
 
         return recommended_restaurants
     except Exception as e:
         return 400
     
+# funcion para meter muchos datos a la base de datos
+def fill_db_ingredients():
+    aura = AuraNeo4j()
+    # crear 500 ingredientes con datos random  y los name deben ser unicos
+    #array de ingredientes
+    ingredients = ["Arroz", "Frijoles", "Carne", "Pollo", "Pescado", "Camarones", "Lechuga", "Tomate", "Pepino", "Cebolla", "Chile", "Pimiento", "Aguacate", "Papa", "Zanahoria", "Espinaca", "Brocoli", "Coliflor", "Calabaza", "Chayote", "Elote", "Cilantro", "Perejil", "Albahaca", "Romero", "Tomillo", "Orégano", "Canela", "Clavo", "Pimienta", "Sal", "Azúcar", "Miel", "Mostaza", "Mayonesa", "Ketchup", "Salsa de soya", "Salsa inglesa", "Salsa picante", "Salsa de tomate", "Salsa de chile", "Salsa de cacahuate", "Salsa de queso", "Salsa de champiñones", "Salsa de ostión", "Salsa de pescado", "Salsa de soya", "Salsa de tamarindo", "Salsa de tomate", "Salsa de yogur", "Salsa de manzana", "Salsa de mango", "Salsa de aguacate", "Salsa de cilantro", "Salsa de chile", "Salsa de pimienta", "Salsa de cebolla", "Salsa de ajo", "Salsa de limón", "Salsa de naranja", "Salsa de piña", "Salsa de fresa", "Salsa de frambuesa", "Salsa de zarzamora", "Salsa de arándano", "Salsa de mora", "Salsa de uva", "Salsa de durazno", "Salsa de manzana", "Salsa de pera", "Salsa de guayaba", "Salsa de ciruela", "Salsa de melocotón", "Salsa de albaricoque", "Salsa de papaya", "Salsa de mango", "Salsa de coco", "Salsa de piña", "Salsa de plátano", "Salsa de guanábana", "Salsa de naranja", "Salsa de limón", "Salsa de mandarina", "Salsa de toronja", "Salsa de lima", "Harina", "Levadura", "Aceite", "Mantequilla", "Huevo", "Leche", "Crema", "Yogur", "Queso", "Jamón", "Tocino", "Salchicha", "Chorizo", "Atún", "Sardina", "Pasta", "Arroz", "Pan", "Tortilla", "Tostada", "Galleta", "Pastel", "Helado", "Gelatina", "Flan", "Cereal", "Avena", "Granola", "Café", "Té", "Agua", "Refresco", "Jugo", "Cerveza", "Vino", "Whisky", "Ron", "Vodka", "Tequila", "Brandy", "Ginebra", "Cognac", "Champagne", "Licor", "Cerveza", "Vino", "Whisky", "Ron", "Vodka", "Tequila", "Brandy", "Ginebra", "Cognac", "Champagne", "Licor", "Cerveza", "Vino", "Whisky", "Ron", "Vodka", "Tequila", "Brandy", "Ginebra", "Cognac", "Champagne", "Licor", "Cerveza", "Vino", "Whisky", "Ron", "Vodka", "Tequila", "Brandy", "Ginebra", "Cognac", "Champagne", "Licor", "Cerveza", "Vino", "Whisky", "Ron", "Vodka", "Tequila", "Brandy", "Ginebra", "Cognac", "Champagne", "Licor", "Cerveza", "Vino", "Whisky", "Ron", "Vodka", "Tequila", "Brandy", "Ginebra", "Cognac", "Champagne", "Licor", "Cerveza", "Vino", "Whisky", "Ron", "Vodka", "Tequila", "Brandy", "Ginebra", "Cognac", "Champagne", "Licor", "Cerveza", "Vino", "Whisky", "Ron", "Vodka", "Tequila", "Brandy"]
+    # crear con las propiedades: name, calories, type, has_gluten, is_vegan
+    for ingredient in ingredients:
+        ingredient = {
+            "name": ingredient,
+            "calories": random.randint(1, 1000),
+            "type": random.choice(["vegetable", "fruit", "meat", "dairy", "grain", "drink", "alcohol", "sweet", "spice", "condiment"]),
+            "has_gluten": random.choice([True, False]),
+            "is_vegan": random.choice([True, False])
+        }
+        aura.create_ingredient(ingredient)
+
+
 if __name__ == "__main__":
-    print(sistema_recomendacion("mor21146@uvg.edu."))
-        
+    #fill_db_ingredients()    
+    print("hola") 
         
     
