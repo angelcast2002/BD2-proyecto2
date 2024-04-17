@@ -13,4 +13,5 @@ export default createRouter([
   ["/adddish", () => ({ page: "adddish" })],
   ["/addparking", () => ({ page: "addparking" })],
   ["/dinerondish/*", (id) => ({ page: "dinerondish", props: { id }})],
+  ["/homeadmin", () => ({ page: "homeadmin" })]
 ])

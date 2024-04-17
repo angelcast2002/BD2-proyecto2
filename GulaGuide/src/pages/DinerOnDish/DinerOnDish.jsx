@@ -9,6 +9,7 @@ import useApi from "../../Hooks/useApi";
 import Header from "../../components/Header/Header";
 import Popup from "../../components/Popup/Popup";
 import Button from "../../components/Button/Button";
+import { navigate } from "../../store";
 
 const DinerOnDish = ({ id }) => {
   const api = useApi();
@@ -56,6 +57,9 @@ const DinerOnDish = ({ id }) => {
       setError("Añadido a favoritos")
       setTypeError(3)
       setWarning(true)
+      setTimeout(() => {
+        navigate("/recommendations")
+      }, 5000)
     } else {
       setError("Error al añadir a favoritos")
       setTypeError(1)

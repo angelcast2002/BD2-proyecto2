@@ -49,6 +49,8 @@ const LogIn = () => {
       setWarning(true)
       setTimeout(() => {
         if (datos.role === "Diner") navigate("/recommendations")
+        else if (datos.role === "Admin")
+        navigate("/homeadmin")
         else
         navigate("/edituser")
       }, 5000)

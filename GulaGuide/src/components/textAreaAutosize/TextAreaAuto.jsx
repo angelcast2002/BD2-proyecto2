@@ -12,10 +12,12 @@ const TextArea = ({
   minRows,
   maxRows,
   value,
+  disabled = false,
 }) => {
   return (
     <div className={styles.inputContainer}>
       <TextareaAutosize
+        disabled={disabled}
         className={styles.textArea}
         value={value}
         id={name}

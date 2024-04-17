@@ -8,6 +8,13 @@
     background-color: white;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
     color: black;
-
+    cursor: pointer;
 }
+
+.menuItemContainer:hover{
+    transition: ease-in-out 0.3s;
+    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
+}
+
+
 
