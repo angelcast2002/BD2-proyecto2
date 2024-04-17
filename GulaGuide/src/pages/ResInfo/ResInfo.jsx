@@ -62,9 +62,6 @@ const ResInfo = (restaurant_id) => {
   }
 
 
-
-
-
   useEffect(() => {
     gettingUserInfo()
     if (resInfo) {
@@ -129,20 +126,17 @@ const ResInfo = (restaurant_id) => {
       <div className={style.rightContainer}>
         <h2>Menú</h2>
         <div className={style.menuContainer}>
-          {menu ? (
-            menu.map((item) => {
-              return (
-                <MenuItem
-                  key={item.dish_id}
-                  name={item.name}
-                  price={item.price}
-                  description={item.description}
-                />
-              )
-            })
-          ) : (
-            <p>Cargando Menú</p>
-          )}
+          {Array.isArray(menu) && menu.map((item, index) => {
+            console.log("AQUI AA", item.avg_price);
+            return (
+              <MenuItem
+                key={index}
+                name={item.name}
+                description={item.description}
+                avg_price={"Q." + item.avg_price + ".00"}
+              />
+            );
+          })}
         </div>
       </div>
     </div>

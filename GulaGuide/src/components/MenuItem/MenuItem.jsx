@@ -1,12 +1,11 @@
 import React from "react"
 import style from "./MenuItem.module.css"
 
-const MenuItem = ({ name, description, price }) => {
+const MenuItem = ({ name, description, avg_price }) => {
   return (
     <div className={style.menuItemContainer}>
-      <strong>{name}</strong> {" "}
+      <strong>{name + " | " + avg_price}</strong> {" "}
       <p>{description}</p>
-      <p>{price}</p>
     </div>
   )
 }
