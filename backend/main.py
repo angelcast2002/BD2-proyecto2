@@ -415,8 +415,30 @@ def get_restaurant_comments(restaurant_id: str):
         # 
         return {"status": 200, "message": "Comentarios obtenidos exitosamente", "data": aura_response}
 
+# Parking
+@app.get("/parking/location")
+def get_parking_location(parking_id: str):
+    aura_response = aura.get_parking_location(parking_id)
+    if aura_response == 404:
+        return {"status": 404, "message": "El parqueadero no existe o no tiene locacion asociada"}
+    else:
+        return {"status": 200, "message": "Locacion obtenida exitosamente", "data": aura_response}
 
-
+class parkingLocation(BaseModel):
+    parking_id: str
+    street: str
+    avenue: str
+    number: str
+    community: str
+    reference: str
+    zone: int
+@app.post("/parking/location")
+def parking_location(parkingLocation: parkingLocation):
+    aura_response = aura.parking_in(parkingLocation.model_dump())
+    if aura_response == 400:
+        return {"status": 400, "message": "Error creando la locacion"}
+    else:
+        return {"status": 200, "message": "Locacion creada exitosamente"}
 
 # Dish
 
@@ -475,6 +497,87 @@ def delete_location():
         return {"status": 400, "message": "Error eliminando la locacion"}
     else:
         return {"status": 200, "message": "Locacion eliminada exitosamente"}
+
+@app.put("/admin/birthday")
+def birthdat(new_birthdate: str):
+    aura_response = aura.update_user_birthday(new_birthdate)
+    if aura_response == 400:
+        return {"status": 400, "message": "Error actualizando la fecha de nacimiento"}
+    else:
+        return {"status": 200, "message": "Fecha de nacimiento actualizada exitosamente"}
+    
+@app.put("/admin/update_diner_birthday")
+def update_diner_birthday(user_id: str, new_birthday: str):
+    aura_response = aura.update_diner_birthday(new_birthday, user_id)
+    if aura_response == 404:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"status": 200, "message": "Diner birthday updated successfully"}
+
+@app.put("/admin/add_diner_vegan")
+def add_diner_vegan(user_id: str):
+    aura_response = aura.add_diner_vegan(user_id)
+    if aura_response == 404:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"status": 200, "message": "Diner vegan property added successfully"}
+
+@app.put("/admin/add_all_diners_vegan")
+def add_all_diners_vegan():
+    aura_response = aura.add_all_diners_vegan()
+    return {"status": 200, "message": "All diners vegan property added successfully"}
+
+@app.put("/admin/delete_diner_vegan")
+def delete_diner_vegan(user_id: str):
+    aura_response = aura.delete_diner_vegan(user_id)
+    if aura_response == 404:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"status": 200, "message": "Diner vegan property deleted successfully"}
+
+@app.put("/admin/delete_all_diners_vegan")
+def delete_all_diners_vegan():
+    aura_response = aura.delete_all_diners_vegan()
+    return {"status": 200, "message": "All diners vegan property deleted successfully"}
+
+@app.put("/admin/update_ingredient_dish_cook_time")
+def update_ingredient_dish_cook_time(ingredient_name: str, dish_name: str, new_cook_time: int):
+    aura_response = aura.update_ingredient_dish_cook_time(ingredient_name, dish_name, new_cook_time)
+    if aura_response == 404:
+        raise HTTPException(status_code=404, detail="Ingredient or dish not found")
+    return {"status": 200, "message": "Ingredient-dish cook time updated successfully"}
+
+@app.put("/admin/update_dish_ingredients_cook_time")
+def update_dish_ingredients_cook_time(dish_name: str, new_cook_time: int):
+    aura_response = aura.update_dish_ingredients_cook_time(dish_name, new_cook_time)
+    if aura_response == 404:
+        raise HTTPException(status_code=404, detail="Dish not found")
+    return {"status": 200, "message": "Dish ingredients cook time updated successfully"}
+
+@app.put("/admin/add_ingredient_dish_cook_temperature")
+def add_ingredient_dish_cook_temperature(ingredient_name: str, dish_name: str, cook_temperature: int):
+    aura_response = aura.add_ingredient_dish_cook_temperature(ingredient_name, dish_name, cook_temperature)
+    if aura_response == 404:
+        raise HTTPException(status_code=404, detail="Ingredient or dish not found")
+    return {"status": 200, "message": "Ingredient-dish cook temperature added successfully"}
+
+@app.put("/admin/add_dish_ingredients_cook_temperature")
+def add_dish_ingredients_cook_temperature(dish_name: str, cook_temperature: int):
+    aura_response = aura.add_dish_ingredients_cook_temperature(dish_name, cook_temperature)
+    if aura_response == 404:
+        raise HTTPException(status_code=404, detail="Dish not found")
+    return {"status": 200, "message": "Dish ingredients cook temperature added successfully"}
+
+@app.put("/admin/delete_ingredient_dish_cook_temperature")
+def delete_ingredient_dish_cook_temperature(ingredient_name: str, dish_name: str):
+    aura_response = aura.delete_ingredient_dish_cook_temperature(ingredient_name, dish_name)
+    if aura_response == 404:
+        raise HTTPException(status_code=404, detail="Ingredient or dish not found")
+    return {"status": 200, "message": "Ingredient-dish cook temperature deleted successfully"}
+
+@app.put("/admin/delete_dish_ingredients_cook_temperature")
+def delete_dish_ingredients_cook_temperature(dish_name: str):
+    aura_response = aura.delete_dish_ingredients_cook_temperature(dish_name)
+    if aura_response == 404:
+        raise HTTPException(status_code=404, detail="Dish not found")
+    return {"status": 200, "message": "Dish ingredients cook temperature deleted successfully"}
     
 @app.get("/diner/recommend")
 def recommend_dishes(user_id: str, limit: int):
