@@ -11,8 +11,6 @@ const handleClick = () => {
 export const Header = () => {
   const { user } = useStoreon("user")
   const { role } = user
-  console.log("role", role)
-  console.log(user === "diner")
   return (
     <div className={style.mainContainer}>
       <div className={style.actions}>
@@ -24,13 +22,13 @@ export const Header = () => {
           Recomendaciones
         </a>
         <a
-          href="/createnodes"
+          href="/adddish"
           style={role === "Diner" ? { display: "none" } : { display: "block" }}
         >
           Agregar plato
         </a>
         <a
-          href="/createnodes"
+          href="/addparking"
           style={role === "Diner" ? { display: "none" } : { display: "block" }}
         >
           Agregar parqueo
