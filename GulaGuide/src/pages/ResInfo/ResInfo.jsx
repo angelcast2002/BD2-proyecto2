@@ -27,6 +27,7 @@ const ResInfo = ({ id }) => {
 
     let precios = data.prices.split("-")
     setPrecios("Q." + precios[0] + ".00 - Q." + precios[1] + ".00")
+
   }
   // datos del restaurante que se mostrarán en la página
   const gettingUserInfo = async () => {
@@ -85,13 +86,16 @@ const ResInfo = ({ id }) => {
   const handleAddFavorite = async () => {
     // aqui se maneja añadir a favoritos
     console.log("Presionando añadir a favoritos")
+    console.log(resInfo)
+    console.log(menu)
+    console.log(location)
+    console.log(comments)
   }
 
   return (
     <div className={style.mainContainer}>
       <Header />
       <div className={style.resInfoContainer}>
-        {" "}
         <div className={style.leftContainer}>
           <div className={style.imgContainer}>
             <img
@@ -110,15 +114,15 @@ const ResInfo = ({ id }) => {
                 <strong>Dirección:</strong>{" "}
                 {location
                   ? location.street +
-                    ", " +
-                    location.number +
-                    ", " +
-                    location.community
+                  ", " +
+                  location.number +
+                  ", " +
+                  location.community
                   : "No disponible"}
               </p>
               <p className={style.rating}>
                 <strong>Rating:</strong>{" "}
-                {resInfo ? resInfo.rating : "Cargando Rating"}
+                {resInfo ? (resInfo.rating === -1 ? "Sin rating" : resInfo.rating) : "Cargando Rating"}
               </p>
               <p>
                 <strong>Horario:</strong>{" "}
