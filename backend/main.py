@@ -405,6 +405,19 @@ def restaurant_delivery(delivery: restaurantDelivery):
         return {"status": 400, "message": "Error creando la relacion"}
     else:
         return {"status": 200, "message": "Delivery creado exitosamente"}
+    
+@app.get("/restaurant/comments")
+def get_restaurant_comments(restaurant_id: str):
+    aura_response = aura.get_restaurant_reviews(restaurant_id)
+    if aura_response == 404:
+        return {"status": 404, "message": "El restaurante no tiene comentarios"}
+    else:
+        return aura_response
+
+
+
+
+# Dish
 
 class dish_opinion(BaseModel):
     dish_id: str
@@ -413,7 +426,6 @@ class dish_opinion(BaseModel):
     likes: bool
     comment: str
 
-# Dish
 
 @app.post("/dish/opinion")
 def dish_opinion(dish_opinion: dish_opinion):
@@ -422,8 +434,14 @@ def dish_opinion(dish_opinion: dish_opinion):
         return {"status": 400, "message": "Error creando la opinion"}
     else:
         return {"status": 200, "message": "Opinion creada exitosamente"}
-
-
+    
+@app.get("/dish/ingredients")
+def get_ingredients(dish_id: str):
+    aura_response = aura.get_ingredients(dish_id)
+    if aura_response == 404:
+        return {"status": 404, "message": "El plato no existe"}
+    else:
+        return aura_response
 
 class ingredient_plate(BaseModel):
     ingredient_id: str

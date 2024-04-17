@@ -623,16 +623,39 @@ class AuraNeo4j:
             return 404
         
     
-    def execute_query(self, query: str, **kwargs):
+    def get_ingredients(self, dish_name: str):
         with self.driver.session() as session:
-            return session.read_transaction(self._execute_query, query, **kwargs)
+            return session.read_transaction(self._get_ingredients, dish_name)
         
     @staticmethod
-    def _execute_query(tx: Transaction, query: str, **kwargs):
+    def _get_ingredients(tx: Transaction, dish_name: str):
+        search_query = (
+            "MATCH (d:Dish {name: $dish_name})<-[hi:USED_IN]-(i:Ingredient) "
+            "RETURN i.name AS name"
+        )
         try:
-            return tx.run(query, **kwargs)
+            result = tx.run(search_query, dish_name=dish_name)
+            return [record["name"] for record in result]
         except Exception as e:
-            return 400
+            return None
+        
+    # obtener la resena de un usuario a un restaurante (visita) donde retorna el nombre del usuario, apellido y todas las propiedades de la relacion de visited
+    def get_restaurant_reviews(self, restaurant_id: str):
+        with self.driver.session() as session:
+            return session.read_transaction(self._get_restaurant_reviews, restaurant_id)
+        
+    @staticmethod
+    def _get_restaurant_reviews(tx: Transaction, restaurant_id: str):
+        search_query = (
+            "MATCH (d:Diner)-[v:VISITED]->(r:Restaurant {user_id: $restaurant_id}) "
+            "RETURN d.name AS name, d.lastname AS lastname, v"
+        )
+        try:
+            result = tx.run(search_query, restaurant_id=restaurant_id)
+            return [record for record in result]
+        except Exception as e:
+            return None
+
     # obtener los restaurantes que le gustan al usuario (rating > 3)
     def get_user_likes(self, user_id: str):
         with self.driver.session() as session:
