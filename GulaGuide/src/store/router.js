@@ -7,9 +7,7 @@ export default createRouter([
   ["/edituser", () => ({ page: "edituser" })],
   ["/recommendations", () => ({ page: "recommendations" })],
   ["/setsettings", () => ({ page: "setsettings" })],
-  ["/resinfo", () => ({ page: "resinfo" })],
+  ["/resinfo/*", (id) => ({ page: "resinfo", props: { id } })],
   ["/dishinfo", () => ({ page: "dishinfo" })],
-  ["/addvisit", () => ({ page: "addvisit" })]
-
-
+  ["/addvisit", () => ({ page: "addvisit" })],
 ])

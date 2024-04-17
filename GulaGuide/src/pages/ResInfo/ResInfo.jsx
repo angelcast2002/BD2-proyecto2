@@ -7,10 +7,9 @@ import useApi from "../../Hooks/useApi"
 import CommentsComponent from "../../components/CommentsComponent/CommentsComponent"
 import MenuItem from "../../components/MenuItem/MenuItem"
 
-const ResInfo = (restaurant_id) => {
-
-  restaurant_id = "Pizza Hut"
-  restaurant_id = "cayala@trefratelli.com"
+const ResInfo = ({id}) => {
+  const restaurant_id = id
+  console.log("restaurant_id", id)
 
   const api = useApi()
   const { user } = useStoreon("user")

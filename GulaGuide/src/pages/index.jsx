@@ -35,7 +35,7 @@ const Page = () => {
       Component = <SetSettings />
       break
     case "resinfo":
-      Component = <ResInfo />
+      Component = <ResInfo id={route.match.props.id} />
       break
     case "dishinfo":
       Component = <DishInfo />

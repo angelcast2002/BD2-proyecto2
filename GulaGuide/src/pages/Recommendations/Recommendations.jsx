@@ -94,7 +94,7 @@ const Recommendations = () => {
   }
 
   const handleClickRestaurant = (id) => () => {
-    navigate("/resinfo/" + id)
+    navigate(`/resinfo/${id}`)
   }
 
   const handleZona = (e, newValue) => {
