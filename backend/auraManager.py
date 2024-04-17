@@ -648,11 +648,18 @@ class AuraNeo4j:
     def _get_restaurant_reviews(tx: Transaction, restaurant_id: str):
         search_query = (
             "MATCH (d:Diner)-[v:VISITED]->(r:Restaurant {user_id: $restaurant_id}) "
-            "RETURN d.name AS name, d.lastname AS lastname, v"
+            "RETURN  d.name as name, d.lastname as lastname, toString(v.date) as date, v.total as total, v.rating as rating, v.dishes as dishes, v.comment as comment"
         )
         try:
             result = tx.run(search_query, restaurant_id=restaurant_id)
-            return [record for record in result]
+            records = []
+            for record in result:
+                # Obtener los nombres de los campos
+                keys = record.keys()
+                # Mapear los valores con los nombres de los campos
+                mapped_record = {key: record[key] for key in keys}
+                records.append(mapped_record)
+            return records
         except Exception as e:
             return None
 
@@ -820,52 +827,70 @@ class AuraNeo4j:
         
 def sistema_recomendacion(user_id: str):
     aura = AuraNeo4j()
-    # obtener los restaurantes que le gustan al usuario (rating > 3)
 
-    likes_restaurants = aura.get_user_likes(user_id)
+    # verificar si el usuario existe
+    user = aura.get_user_info(user_id)
+    if user == 404:
+        return 404
+
+    try:
+        # obtener los restaurantes que le gustan al usuario (rating > 3)
+
+        likes_restaurants = aura.get_user_likes(user_id)
 
 
-    # obtener los restaurantes que estan en la misma zona que el usuario
+        # obtener los restaurantes que estan en la misma zona que el usuario
 
-    zone_restaurants = aura.get_zone_restaurants(user_id)
+        zone_restaurants = aura.get_zone_restaurants(user_id)
 
-    # obtener los restaurantes que tienen los platos favoritos del usuario
-    
-    fav_dishes_restaurants = aura.get_fav_dishes_restaurants(user_id)
+        # obtener los restaurantes que tienen los platos favoritos del usuario
+        
+        fav_dishes_restaurants = aura.get_fav_dishes_restaurants(user_id)
 
-    # obtener los restaurantes que tienen los platos que le gustan al usuario
+        # obtener los restaurantes que tienen los platos que le gustan al usuario
 
-    likes_dishes_restaurants = aura.get_likes_dishes_restaurants(user_id)
+        likes_dishes_restaurants = aura.get_likes_dishes_restaurants(user_id)
 
-    # si el usuario tiene carro, obtener los restaurantes que tienen parqueo
+        # si el usuario tiene carro, obtener los restaurantes que tienen parqueo
 
-    car_parking_restaurants = aura.get_car_parking_restaurants(user_id)
+        car_parking_restaurants = aura.get_car_parking_restaurants(user_id)
 
-    # obtener los restaurantes que tienen delivery a la zona del usuario
+        # obtener los restaurantes que tienen delivery a la zona del usuario
 
-    delivery_restaurants = aura.get_delivery_restaurants(user_id)
+        delivery_restaurants = aura.get_delivery_restaurants(user_id)
 
-    # obtener los restaurantes que tienen un rating mayor a 4
+        # obtener los restaurantes que tienen un rating mayor a 4
 
-    rating_restaurants = aura.get_rating_restaurants(user_id)
+        rating_restaurants = aura.get_rating_restaurants(user_id)
 
-    # obtener los restaurantes que le gusta al usuario
+        # obtener los restaurantes que le gusta al usuario
 
-    user_likes = aura.get_user_likes_restaurant(user_id)
+        user_likes = aura.get_user_likes_restaurant(user_id)
 
-    # obtener los restaurantes que son los favoritos del usuario
+        # obtener los restaurantes que son los favoritos del usuario
 
-    user_favs = aura.get_user_favs(user_id)
+        user_favs = aura.get_user_favs(user_id)
 
-    # combinar todas las recomendaciones. Se puede hacer un conteo de cuantas veces aparece cada restaurante en las recomendaciones y ordenarlos de mayor a menor
-    recommendations = likes_restaurants + zone_restaurants + fav_dishes_restaurants + likes_dishes_restaurants + car_parking_restaurants + delivery_restaurants + rating_restaurants + user_likes + user_favs
-    recommendations = {restaurant: recommendations.count(restaurant) for restaurant in recommendations}
-    recommendations = dict(sorted(recommendations.items(), key=lambda item: item[1], reverse=True))
-    return recommendations
+        # combinar todas las recomendaciones. Se puede hacer un conteo de cuantas veces aparece cada restaurante en las recomendaciones y ordenarlos de mayor a menor
+        recommendations = likes_restaurants + zone_restaurants + fav_dishes_restaurants + likes_dishes_restaurants + car_parking_restaurants + delivery_restaurants + rating_restaurants + user_likes + user_favs
+        recommendations = {restaurant: recommendations.count(restaurant) for restaurant in recommendations}
+        recommendations = dict(sorted(recommendations.items(), key=lambda item: item[1], reverse=True))
+        
+        #tomar las primeras 20 recomendaciones
+        recommendations = list(recommendations.keys())[:20]
 
+        # obtener la informacion de los restaurantes recomendados
+        recommended_restaurants = []
+        for restaurant_id in recommendations:
+            restaurant = aura.get_user_info(restaurant_id)
+            recommended_restaurants.append(restaurant)
+
+        return recommended_restaurants
+    except Exception as e:
+        return 400
     
 if __name__ == "__main__":
-    print(sistema_recomendacion("mor21146@uvg.edu.gt"))
+    print(sistema_recomendacion("mor21146@uvg.edu."))
         
         
     

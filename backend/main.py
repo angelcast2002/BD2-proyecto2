@@ -363,7 +363,7 @@ class RestaurantLocation(BaseModel):
 def restaurant_location(restaurantLocation: RestaurantLocation):
     aura_response = aura.restaurant_located_in(restaurantLocation.model_dump())
     if aura_response == 400:
-        return {"status": 400, "message": f"Error creando la locacion"}
+        return {"status": 400, "message": "Error creando la locacion"}
     else:
         return {"status": 200, "message": "Locacion creada exitosamente"}
     
@@ -412,7 +412,8 @@ def get_restaurant_comments(restaurant_id: str):
     if aura_response == 404:
         return {"status": 404, "message": "El restaurante no tiene comentarios"}
     else:
-        return aura_response
+        # 
+        return {"status": 200, "message": "Comentarios obtenidos exitosamente", "data": aura_response}
 
 
 
@@ -480,8 +481,10 @@ def recommend_dishes(user_id: str):
     aura_response = sistema_recomendacion(user_id)
     if aura_response == 404:
         return {"status": 404, "message": "El usuario no existe"}
+    elif aura_response == 400:
+        return {"status": 400, "message": "Error obteniendo las recomendaciones"}
     else:
-        return aura_response
+        return {"status": 200, "message": "Recomendaciones creadas exitosamente", "data": aura_response}
     
 # Para correrlo en local
 if __name__ == "__main__":
