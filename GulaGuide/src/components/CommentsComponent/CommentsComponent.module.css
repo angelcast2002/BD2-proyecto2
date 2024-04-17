@@ -19,7 +19,6 @@
 }
 
 .mainContainer p {
-    font-size: 1.2rem;
     font-weight: 500;
     margin: 0;
     padding: 2px 0;
@@ -34,7 +33,7 @@
 }
 
 .commentsContainer{
-    height: 150px;
+    height: 200px;
     overflow-y: auto;
     scrollbar-width: none; /* Para Firefox */
     -ms-overflow-style: none;  /* Para Internet Explorer y Edge */
@@ -42,5 +41,18 @@
 
 .commentsContainer::-webkit-scrollbar {
     display: none; /* Para Chrome, Safari y Opera */
+}
+
+.commentsContainer h3 {
+    text-align: justify;
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin: 0
+}
+
+.commentsContainer p {
+    font-size: 1rem;
+    margin-top: 2px;
+    text-align: center;
 }
 

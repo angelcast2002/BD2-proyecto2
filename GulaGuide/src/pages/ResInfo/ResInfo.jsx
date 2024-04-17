@@ -74,7 +74,7 @@ const ResInfo = ({ id }) => {
       "restaurant/comments?restaurant_id=" + restaurant_id
     )
     const ans = await response_comments // Recibidos
-    setComments(ans)
+    setComments(ans.data)
   }
 
   useEffect(() => {
@@ -84,27 +84,14 @@ const ResInfo = ({ id }) => {
     getComments()
   }, [])
 
+  console.log("comments ->", comments)
+
   const handleAddVisit = async () => {
     // aqui se maneja ir hacia la página de añadir visita
     navigate(`/addvisit/${restaurant_id}`)
   }
 
   const handleAddFavorite = async () => {
-    // aqui se maneja añadir a favoritos
-    console.log("Presionando añadir a favoritos")
-    console.log(user.id_user)
-    console.log(restaurant_id)
-
-    // se llamará a POST diner/on_restaurant 
-    /**
-      {
-        "diner_id": "string", <- ya lo tengo
-        "restaurant_id": "string", <- ya lo tengo
-        "its_fav": true, <- default true
-        "user_likes": true, <- default true
-        "comments": "string" <- default ""
-      }
-     */
 
     const response = await api.handleRequest(
       "POST",
@@ -118,7 +105,6 @@ const ResInfo = ({ id }) => {
       }
     )
     const data = await response
-    console.log("data del favorito ->", data)
     if (data.status === 200) {
       setError("Añadido a favoritos")
       setTypeError(3)

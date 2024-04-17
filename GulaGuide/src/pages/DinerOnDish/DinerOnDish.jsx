@@ -85,7 +85,6 @@ const DinerOnDish = ({ id }) => {
           <Button
             label="Añadir a favoritos"
             backgroundColor="#FFD700"
-            textColor="#000"
             onClick={handleClickAddFavs}
           />
         </div>
