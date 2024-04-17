@@ -9,6 +9,7 @@ export default createRouter([
   ["/setsettings", () => ({ page: "setsettings" })],
   ["/resinfo", () => ({ page: "resinfo" })],
   ["/dishinfo", () => ({ page: "dishinfo" })]
+  ["/addvisit", () => ({ page: "addvisit" })]
+
 
 ])
-
