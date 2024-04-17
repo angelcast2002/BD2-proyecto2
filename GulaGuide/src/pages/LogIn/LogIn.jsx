@@ -36,8 +36,6 @@ const LogIn = () => {
 
     const datos = await response // Recibidos
 
-    console.log("datos.data ->", datos.role)
-
     if (datos.status === 200) {
       dispatch("user/config",
         {
@@ -49,6 +47,9 @@ const LogIn = () => {
       setError("Sesión iniciada correctamente")
       setTypeError(3)
       setWarning(true)
+      setTimeout(() => {
+        navigate("/recommendations")
+      }, 5000)
     } else if (datos.status === 400) {
       setError(datos.message)
       setTypeError(1)
