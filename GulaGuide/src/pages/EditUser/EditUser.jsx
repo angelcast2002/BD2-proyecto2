@@ -4,9 +4,12 @@ import { useStoreon } from "storeon/react"
 import ComponentInput from "../../components/Input/Input"
 import { Checkbox } from "@mui/material"
 import useApi from "../../Hooks/useApi"
+import { navigate } from "../../store"
 import { set } from "date-fns"
 import Button from "../../components/Button/Button"
 import Header from "../../components/Header/Header"
+import Popup from "../../components/Popup/Popup"
+
 
 const EditUser = () => {
 
@@ -30,6 +33,10 @@ const EditUser = () => {
   const [maxSchedule, setMaxSchedule] = useState("20")
   const [petFriendly, setPetFriendly] = useState(false)
   const [sellsAlcohol, setSellsAlcohol] = useState(false)
+
+  const [error, setError] = useState("")
+  const [warning, setWarning] = useState(false)
+  const [typeError, setTypeError] = useState("")
 
   function splitByDash(text) {
     const parts = text.split('-');
@@ -142,7 +149,16 @@ const EditUser = () => {
       )
 
       const datos = await response // Recibidos
-      console.log("datos de actualizacion diner ->", datos)
+      if (datos.status === 200) {
+        setError("Cambios guardados correctamente")
+        setTypeError(3)
+        setWarning(true)
+      } else {
+        setError("Error al guardar los cambios")
+        setTypeError(1)
+        setWarning(true)
+      }
+
     }
     else if (user.role === "Restaurant") {
       const response = await api.handleRequest(
@@ -159,15 +175,57 @@ const EditUser = () => {
       )
 
       const datos = await response // Recibidos
-      console.log("datos de actualizacion restaurant ->", datos)
+      if (datos.status === 200) {
+        setError("Cambios guardados correctamente")
+        setTypeError(3)
+        setWarning(true)
+      } else {
+        setError("Error al guardar los cambios")
+        setTypeError(1)
+        setWarning(true)
+      }
     }
 
+    
+
+  }
+
+  const handleDeleteUser = async () => {
+    const response = await api.handleRequest(
+      "DELETE",
+      "user/delete?user_id=" + user.id_user
+    )
+    const datos = response // Recibidos
+    console.log("datos de eliminacion ->", datos)
+    if(datos.status === 200){
+      setError("Usuario eliminado correctamente")
+      setTypeError(3)
+      setWarning(true)
+      setTimeout(() => {
+        navigate("/login")
+      }, 5000)
+
+    } else if (datos.status === 404){
+      setError("El usuario ya ha sido eliminado")
+      setTypeError(2)
+      setWarning(true)
+    } else {
+      setError("Error al eliminar el usuario")
+      setTypeError(1)
+      setWarning(true)
+    }
   }
 
 
   return (
     <div className={style.editUserContainer}>
       <Header />
+      <Popup
+        message={error}
+        status={warning}
+        style={typeError}
+        close={() => setWarning(false)}
+      />
       <div className={style.mainContainer}>
         <div className={style.imgContainer}>
           <img src={pfp} alt="profile picture" />
@@ -300,7 +358,7 @@ const EditUser = () => {
             </div>
           )}
           <div className={style.buttonContainer}>
-            <Button label="Eliminar Usuario" size={"75%"} />
+            <Button label="Eliminar Usuario" onClick={handleDeleteUser} size={"75%"} />
             <Button
               label="Guardar Cambios"
               onClick={handleSaveChanges}
