@@ -114,7 +114,7 @@ const ResInfo = ({ id }) => {
                     location.number +
                     ", " +
                     location.community
-                  : "Cargando Dirección"}
+                  : "No disponible"}
               </p>
               <p className={style.rating}>
                 <strong>Rating:</strong>{" "}
