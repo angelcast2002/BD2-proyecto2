@@ -7,7 +7,7 @@ from pydantic import BaseModel # recibir el body de la peticion
 from datetime import datetime
 from fastapi import FastAPI, HTTPException, Depends
 
-from auraManager import AuraNeo4j
+from auraManager import AuraNeo4j, sistema_recomendacion
 from neo4j import GraphDatabase
 
 
@@ -374,13 +374,13 @@ class restaurant_parking(BaseModel):
     free_hours: int
     exclusive: bool
 
+
 @app.get("/restaurant/location")
 def get_restaurant_location(restaurant_id: str):
     aura_response = aura.serach_restaurant_location(restaurant_id)
     if aura_response == 404:
         return {"status": 404, "message": "El restaurante no existe o no tiene locacion asociada"}
     else:
-        # parsear la respuesta para que todo se retorne en un json.
         return {"status": 200, "message": "Locacion obtenida exitosamente", "data": aura_response}
 
 @app.post("/restaurant/parking")
@@ -456,6 +456,14 @@ def delete_location():
         return {"status": 400, "message": "Error eliminando la locacion"}
     else:
         return {"status": 200, "message": "Locacion eliminada exitosamente"}
+    
+@app.get("/diner/recommend")
+def recommend_dishes(user_id: str):
+    aura_response = sistema_recomendacion(user_id)
+    if aura_response == 404:
+        return {"status": 404, "message": "El usuario no existe"}
+    else:
+        return aura_response
     
 # Para correrlo en local
 if __name__ == "__main__":

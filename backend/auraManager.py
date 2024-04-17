@@ -623,6 +623,226 @@ class AuraNeo4j:
             return 404
         
     
+    def execute_query(self, query: str, **kwargs):
+        with self.driver.session() as session:
+            return session.read_transaction(self._execute_query, query, **kwargs)
+        
+    @staticmethod
+    def _execute_query(tx: Transaction, query: str, **kwargs):
+        try:
+            return tx.run(query, **kwargs)
+        except Exception as e:
+            return 400
+    # obtener los restaurantes que le gustan al usuario (rating > 3)
+    def get_user_likes(self, user_id: str):
+        with self.driver.session() as session:
+            return session.read_transaction(self._get_user_likes, user_id)
+        
+    @staticmethod
+    def _get_user_likes(tx: Transaction, user_id: str):
+        query = (
+            "MATCH (d:Diner {user_id: $user_id})-[v:VISITED]->(r:Restaurant) "
+            "WHERE v.rating > 3 "
+            "RETURN r.user_id AS user_id"
+        )
+        try:
+            result = tx.run(query, user_id=user_id)
+            return [record["user_id"] for record in result]
+        except Exception as e:
+            return None
+    
+    # obtener los restaurantes que estan en la misma zona que el usuario
+    def get_zone_restaurants(self, user_id: str):
+        with self.driver.session() as session:
+            return session.read_transaction(self._get_zone_restaurants, user_id)
+        
+    @staticmethod
+    def _get_zone_restaurants(tx: Transaction, user_id: str):
+        query = (
+            "MATCH (d:Diner {user_id: $user_id})-[li:LIVES_IN]->(l:Location) "
+            "MATCH (r:Restaurant)-[li:LOCATED_IN]->(l) "
+            "RETURN r.user_id AS user_id"
+        )
+        try:
+            result = tx.run(query, user_id=user_id)
+            return [record["user_id"] for record in result]
+        except Exception as e:
+            return None
+        
+    # obtener los restaurantes que tienen los platos favoritos del usuario
+    def get_fav_dishes_restaurants(self, user_id: str):
+        with self.driver.session() as session:
+            return session.read_transaction(self._get_fav_dishes_restaurants, user_id)
+        
+    @staticmethod
+    def _get_fav_dishes_restaurants(tx: Transaction, user_id: str):
+        query = (
+            "MATCH (d:Diner {user_id: $user_id})-[do:DISH_OPINION {favorite: true}]->(di:Dish) "
+            "MATCH (r:Restaurant)-[s:SELLS]->(di) "
+            "RETURN r.user_id AS user_id"
+        )
+        try:
+            result = tx.run(query, user_id=user_id)
+            return [record["user_id"] for record in result]
+        except Exception as e:
+            return None
+        
+    # obtener los restaurantes que tienen los platos que le gustan al usuario
+    def get_likes_dishes_restaurants(self, user_id: str):
+        with self.driver.session() as session:
+            return session.read_transaction(self._get_likes_dishes_restaurants, user_id)
+        
+    @staticmethod
+    def _get_likes_dishes_restaurants(tx: Transaction, user_id: str):
+        query = (
+            "MATCH (d:Diner {user_id: $user_id})-[do:DISH_OPINION {likes: true}]->(di:Dish) "
+            "MATCH (r:Restaurant)-[s:SELLS]->(di) "
+            "RETURN r.user_id AS user_id"
+        )
+        try:
+            result = tx.run(query, user_id=user_id)
+            return [record["user_id"] for record in result]
+        except Exception as e:
+            return None
+        
+    # si el usuario tiene carro, obtener los restaurantes que tienen parqueo
+    def get_car_parking_restaurants(self, user_id: str):
+        with self.driver.session() as session:
+            return session.read_transaction(self._get_car_parking_restaurants, user_id)
+        
+    @staticmethod
+    def _get_car_parking_restaurants(tx: Transaction, user_id: str):
+        query = (
+            "MATCH (d:Diner {user_id: $user_id}) "
+            "WHERE d.has_car = true "
+            "MATCH (r:Restaurant)-[hp:HAS_PARKING]->(p:Parking) "
+            "RETURN r.user_id AS user_id"
+        )
+        try:
+            result = tx.run(query, user_id=user_id)
+            return [record["user_id"] for record in result]
+        except Exception as e:
+            return None
+        
+    # obtener los restaurantes que tienen delivery a la zona del usuario
+    def get_delivery_restaurants(self, user_id: str):
+        with self.driver.session() as session:
+            return session.read_transaction(self._get_delivery_restaurants, user_id)
+        
+    @staticmethod
+    def _get_delivery_restaurants(tx: Transaction, user_id: str):
+        query = (
+            "MATCH (d:Diner {user_id: $user_id})-[li:LIVES_IN]->(l:Location) "
+            "MATCH (r:Restaurant)-[hd:HAS_DELIVERY]->(l) "
+            "RETURN r.user_id AS user_id"
+        )
+        try:
+            result = tx.run(query, user_id=user_id)
+            return [record["user_id"] for record in result]
+        except Exception as e:
+            return None
+        
+    # obtener los restaurantes que tienen un rating mayor a 4
+    def get_rating_restaurants(self, user_id: str):
+        with self.driver.session() as session:
+            return session.read_transaction(self._get_rating_restaurants, user_id)
+        
+    @staticmethod
+    def _get_rating_restaurants(tx: Transaction, user_id: str):
+        query = (
+            "MATCH (r:Restaurant) "
+            "WHERE r.rating > 4 "
+            "RETURN r.user_id AS user_id"
+        )
+        try:
+            result = tx.run(query, user_id=user_id)
+            return [record["user_id"] for record in result]
+        except Exception as e:
+            return None
+        
+    # obtener los restaurantes que le gusta al usuario
+    def get_user_likes_restaurant(self, user_id: str):
+        with self.driver.session() as session:
+            return session.read_transaction(self._get_user_likes_restaurant, user_id)
+        
+    @staticmethod
+    def _get_user_likes_restaurant(tx: Transaction, user_id: str):
+        query = (
+            "MATCH (d:Diner {user_id: $user_id})-[do:DINER_ON_RESTAURANT {user_likes: true}]->(r:Restaurant) "
+            "RETURN r.user_id AS user_id"
+        )
+        try:
+            result = tx.run(query, user_id=user_id)
+            return [record["user_id"] for record in result]
+        except Exception as e:
+            return None
+        
+    # obtener los restaurantes que son los favoritos del usuario
+    def get_user_favs(self, user_id: str):
+        with self.driver.session() as session:
+            return session.read_transaction(self._get_user_favs, user_id)
+        
+    @staticmethod
+    def _get_user_favs(tx: Transaction, user_id: str):
+        query = (
+            "MATCH (d:Diner {user_id: $user_id})-[do:DINER_ON_RESTAURANT {its_fav: true}]->(r:Restaurant) "
+            "RETURN r.user_id AS user_id"
+        )
+        try:
+            result = tx.run(query, user_id=user_id)
+            return [record["user_id"] for record in result]
+        except Exception as e:
+            return None
+        
+        
+def sistema_recomendacion(user_id: str):
+    aura = AuraNeo4j()
+    # obtener los restaurantes que le gustan al usuario (rating > 3)
 
+    likes_restaurants = aura.get_user_likes(user_id)
+
+
+    # obtener los restaurantes que estan en la misma zona que el usuario
+
+    zone_restaurants = aura.get_zone_restaurants(user_id)
+
+    # obtener los restaurantes que tienen los platos favoritos del usuario
+    
+    fav_dishes_restaurants = aura.get_fav_dishes_restaurants(user_id)
+
+    # obtener los restaurantes que tienen los platos que le gustan al usuario
+
+    likes_dishes_restaurants = aura.get_likes_dishes_restaurants(user_id)
+
+    # si el usuario tiene carro, obtener los restaurantes que tienen parqueo
+
+    car_parking_restaurants = aura.get_car_parking_restaurants(user_id)
+
+    # obtener los restaurantes que tienen delivery a la zona del usuario
+
+    delivery_restaurants = aura.get_delivery_restaurants(user_id)
+
+    # obtener los restaurantes que tienen un rating mayor a 4
+
+    rating_restaurants = aura.get_rating_restaurants(user_id)
+
+    # obtener los restaurantes que le gusta al usuario
+
+    user_likes = aura.get_user_likes_restaurant(user_id)
+
+    # obtener los restaurantes que son los favoritos del usuario
+
+    user_favs = aura.get_user_favs(user_id)
+
+    # combinar todas las recomendaciones. Se puede hacer un conteo de cuantas veces aparece cada restaurante en las recomendaciones y ordenarlos de mayor a menor
+    recommendations = likes_restaurants + zone_restaurants + fav_dishes_restaurants + likes_dishes_restaurants + car_parking_restaurants + delivery_restaurants + rating_restaurants + user_likes + user_favs
+    recommendations = {restaurant: recommendations.count(restaurant) for restaurant in recommendations}
+    recommendations = dict(sorted(recommendations.items(), key=lambda item: item[1], reverse=True))
+    return recommendations
+
+    
+if __name__ == "__main__":
+    print(sistema_recomendacion("mor21146@uvg.edu.gt"))
+        
         
     
