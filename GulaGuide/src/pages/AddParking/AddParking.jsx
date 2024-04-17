@@ -115,7 +115,7 @@ const AddParking = () => {
           <Checkbox name="exclusive" onChange={handleValues} />
         </div>
         <div className={styles.inputContainer}>
-          <Button label="Agregar platillo" onClick={handleClick} />
+          <Button label="Agregar parqueo" onClick={handleClick} />
         </div>
       </div>
     </div>
