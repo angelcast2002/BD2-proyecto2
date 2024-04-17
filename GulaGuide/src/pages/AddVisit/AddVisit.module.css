@@ -1,13 +1,18 @@
 .mainContainer{
     width: 100%;
     height: 100%;
-    color: black;
-    flex-direction: column;
     display: flex;
+    flex-direction: column;
+}
+
+.mainContainer2{
+    color: black;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 40px;
-
 }
 
 .upContainer{
