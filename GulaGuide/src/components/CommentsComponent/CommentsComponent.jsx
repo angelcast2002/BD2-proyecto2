@@ -11,7 +11,15 @@ import style from "./CommentsComponent.module.css"
 
 const CommentsComponent = ({ comments }) => {
 
-  comments = [["Juan", "Muy buena comida"], ["Pedro", "Muy mal servicio"], ["Maria", "Excelente lugar"], ["Jose Perez", "En realidad no me gustó mucho la comida, los baños estaban algo sucios pero la atención fue excelente. Creo que la mesera estaba coqueteando conmigo. A mi esposa no le gustó mucho. "]]
+  console.log(comments)
+
+  comments = [["hola", "hola"], ["hola", "hola"]]
+
+  /**
+   * 
+   */
+
+
 
   return (
     <div className={style.mainContainer}>

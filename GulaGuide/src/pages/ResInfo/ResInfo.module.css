@@ -87,3 +87,7 @@ p {
 .menuContainer::-webkit-scrollbar {
     display: none; /* Para Chrome, Safari y Opera */
 }
+
+.address{
+    font-size: 15px;
+}

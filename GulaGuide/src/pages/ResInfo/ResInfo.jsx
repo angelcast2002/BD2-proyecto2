@@ -9,14 +9,16 @@ import MenuItem from "../../components/MenuItem/MenuItem"
 
 const ResInfo = (restaurant_id) => {
 
-  restaurant_id = "cayala@trefratelli.com"
+  restaurant_id = "Pizza Hut"
 
   const api = useApi()
   const { user } = useStoreon("user")
   const [resInfo, setResInfo] = useState(null)
   const [menu, setMenu] = useState(null)
-  const [horario, setHorario] = useState("horario")
-  const [precios, setPrecios] = useState("precios")
+  const [horario, setHorario] = useState("")
+  const [precios, setPrecios] = useState("")
+  const [location, setLocation] = useState("")
+  const [comments, setComments] = useState(null)
 
   // datos del restaurante que se mostrarán en la página
   const gettingUserInfo = async () => {
@@ -35,28 +37,56 @@ const ResInfo = (restaurant_id) => {
       "GET",
       "restaurant/dishes?restaurant_id=" + restaurant_id
     )
-    const data = await response_menu // Recibidos
-    setMenu(data)
+    const ans = await response_menu // Recibidos
+    setMenu(ans.data)
   }
+
+  const getLocation = async () => {
+    let response_location
+    response_location = await api.handleRequest(
+      "GET",
+      "restaurant/location?restaurant_id=" + restaurant_id
+    )
+    const ans = await response_location // Recibidos
+    setLocation(ans.data)
+  }
+
+  const getComments = async () => {
+    let response_comments
+    response_comments = await api.handleRequest(
+      "GET",
+      "restaurant/comments?restaurant_id=" + restaurant_id
+    )
+    const ans = await response_comments // Recibidos
+    setComments(ans)
+  }
+
+
+
+
 
   useEffect(() => {
     gettingUserInfo()
-    gettingMenu()
-
-
-    // split schedule. get two parts. before - and after (including -). Add "hrs" to both of them at the end of each. 
     if (resInfo) {
+      console.log("resInfo.schedule", resInfo.schedule)
       let horario = resInfo.schedule.split("-")
       setHorario(horario[0] + "hrs - " + horario[1] + "hrs")
 
+      console.log("resInfo.prices", resInfo.prices)
       let precios = resInfo.prices.split("-")
       setPrecios("Q." + precios[0] + ".00 - Q." + precios[1] + ".00")
     }
+
+    gettingMenu()
+    getLocation()
+    getComments()
 
   }, [])
 
   console.log("menu: \n", menu)
   console.log("resInfo", resInfo)
+  console.log("location", location)
+  console.log("comments", comments)
 
   return (
     <div className={style.resInfoContainer}>
@@ -74,9 +104,9 @@ const ResInfo = (restaurant_id) => {
         <h1>{resInfo ? resInfo.name : "Cargando Nombre"}</h1>
         <div className={style.infoContainer}>
           <div className={style.textContainer}>
-            <p>
+            <p className={style.address}>
               <strong>Dirección:</strong>{" "}
-              {resInfo ? resInfo.address : "Cargando Dirección"}
+              {location ? (location.street + " " + location.avenue + " " + location.number + " " + location.community) : "Cargando Dirección"}
             </p>
             <p className={style.rating}>
               <strong>Rating:</strong>{" "}
@@ -90,13 +120,11 @@ const ResInfo = (restaurant_id) => {
               <strong>Precios:</strong>{" "}
               {resInfo ? precios : "Cargando Precios"}
             </p>
-            {resInfo && resInfo.petFriendly && <p> Acepta Mascotas </p>}
+            {resInfo && resInfo.petFriendly && <p> Acepta mascotas </p>}
             {resInfo && resInfo.sells_alcohol && <p> Se puede consumir alcohol </p>}
           </div>
         </div>
-
-        <CommentsComponent comments={["hola mundo", "hola mundo", "hola mundo"]} />
-
+        <CommentsComponent comments={comments} />
       </div>
       <div className={style.rightContainer}>
         <h2>Menú</h2>

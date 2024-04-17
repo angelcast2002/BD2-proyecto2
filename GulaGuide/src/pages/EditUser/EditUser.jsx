@@ -90,8 +90,8 @@ const EditUser = () => {
     const { name, value, checked } = e.target;
     switch (name) {
       case "url":
-        setPfpPreview(e.target.value)
-        setUrl(e.target.value)
+        setUrl(value)
+        setPfp(value)
         break
       case "name":
         setName(e.target.value)
