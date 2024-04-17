@@ -10,6 +10,7 @@ import MenuItem from "../../components/MenuItem/MenuItem"
 const ResInfo = (restaurant_id) => {
 
   restaurant_id = "Pizza Hut"
+  restaurant_id = "cayala@trefratelli.com"
 
   const api = useApi()
   const { user } = useStoreon("user")
@@ -61,7 +62,6 @@ const ResInfo = (restaurant_id) => {
     setComments(ans)
   }
 
-
   useEffect(() => {
     gettingUserInfo()
     if (resInfo) {
@@ -79,6 +79,18 @@ const ResInfo = (restaurant_id) => {
     getComments()
 
   }, [])
+
+  const handleAddVisit = async () => {
+    // aqui se maneja ir hacia la página de añadir visita
+    console.log("Presionando añadir visita")
+  }
+
+  const handleAddFavorite = async () => {
+    // aqui se maneja añadir a favoritos
+    console.log("Presionando añadir a favoritos")
+  }
+
+
 
   console.log("menu: \n", menu)
   console.log("resInfo", resInfo)
@@ -103,7 +115,7 @@ const ResInfo = (restaurant_id) => {
           <div className={style.textContainer}>
             <p className={style.address}>
               <strong>Dirección:</strong>{" "}
-              {location ? (location.street + " " + location.avenue + " " + location.number + " " + location.community) : "Cargando Dirección"}
+              {location ? (location.street + ", " + location.number + ", " + location.community) : "Cargando Dirección"}
             </p>
             <p className={style.rating}>
               <strong>Rating:</strong>{" "}
@@ -121,7 +133,12 @@ const ResInfo = (restaurant_id) => {
             {resInfo && resInfo.sells_alcohol && <p> Se puede consumir alcohol </p>}
           </div>
         </div>
-        <CommentsComponent comments={comments} />
+        <CommentsComponent comments={comments}/>
+        <div></div>
+        <div className={style.buttonContainer}>
+          <button className={style.visit} onClick={handleAddVisit}>Añadir visita</button>
+          <button className={style.comment} onClick={handleAddFavorite}>Añadir a favoritos</button>
+        </div>
       </div>
       <div className={style.rightContainer}>
         <h2>Menú</h2>

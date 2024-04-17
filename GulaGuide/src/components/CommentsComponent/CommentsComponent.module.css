@@ -3,7 +3,8 @@
     flex-direction:column;
     gap:10px;
     width:calc(100% - 80px);
-    background-color: rgb(160, 138, 229);
+    background-color:    #f2ea86;
+    color: black;
 
     border-radius: 10px;
     box-shadow: 0 2px 1px rgba(0,0,0,0.09), 
@@ -12,7 +13,6 @@
         0 16px 8px rgba(0,0,0,0.09), 
         0 32px 16px rgba(0,0,0,0.09);
 
-    color: white;
     text-align: start;
     padding: 20px 40px;
     
@@ -28,13 +28,13 @@
 }
 
 .mainContainer h2 {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     margin: 0;
 }
 
 .commentsContainer{
-    height: 200px;
+    height: 150px;
     overflow-y: auto;
     scrollbar-width: none; /* Para Firefox */
     -ms-overflow-style: none;  /* Para Internet Explorer y Edge */
@@ -43,3 +43,4 @@
 .commentsContainer::-webkit-scrollbar {
     display: none; /* Para Chrome, Safari y Opera */
 }
+

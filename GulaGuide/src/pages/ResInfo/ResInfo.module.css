@@ -38,7 +38,7 @@ p {
     align-items: center;
     padding: 0 40px;
     gap: 20px;
-    background-color: rgb(148, 189, 15);
+    background-color: #e69029;
     color: white;
 }
 
@@ -48,8 +48,8 @@ p {
 }
 
 .imgContainer img{
-    height: 200px;
-    width: 200px;
+    height: 150px;
+    width: 150px;
     padding: 10px;
     object-fit: cover;
     border-radius: 45px;
@@ -90,4 +90,24 @@ p {
 
 .address{
     font-size: 15px;
+}
+
+.buttonContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin: 10px;
+    width: 100%;
+    gap: 10px;
+}
+
+.buttonContainer button{
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: #e69029;
+
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
 }
