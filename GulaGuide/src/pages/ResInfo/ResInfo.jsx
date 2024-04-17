@@ -1,31 +1,48 @@
 import React from "react"
+import { useState } from "react"
+import { useEffect } from "react"
 import style from "./ResInfo.module.css"
 import { useStoreon } from "storeon/react"
 import useApi from "../../Hooks/useApi"
 import CommentsComponent from "../../components/CommentsComponent/CommentsComponent"
 import MenuItem from "../../components/MenuItem/MenuItem"
 
-const ResInfo = () => {
+const ResInfo = (restaurant_id) => {
+
+  restaurant_id = "cayala@trefratelli.com"
 
   const api = useApi()
   const { user } = useStoreon("user")
-  const [resInfo, setResInfo] = React.useState(null)
-  const [horario, setHorario] = React.useState("horario")
-  const [precios, setPrecios] = React.useState("precios")
+  const [resInfo, setResInfo] = useState(null)
+  const [menu, setMenu] = useState(null)
+  const [horario, setHorario] = useState("horario")
+  const [precios, setPrecios] = useState("precios")
 
   // datos del restaurante que se mostrarán en la página
   const gettingUserInfo = async () => {
     let response_user_info
     response_user_info = await api.handleRequest(
       "GET",
-      "get/restaurant?restaurant_id=" + user.id_user
+      "get/restaurant?restaurant_id=" + restaurant_id // esto en realidad no está bien. 
     )
     const data = await response_user_info // Recibidos
     setResInfo(data[0])
   }
 
-  React.useEffect(() => {
+  const gettingMenu = async () => {
+    let response_menu
+    response_menu = await api.handleRequest(
+      "GET",
+      "restaurant/dishes?restaurant_id=" + restaurant_id
+    )
+    const data = await response_menu // Recibidos
+    setMenu(data)
+  }
+
+  useEffect(() => {
     gettingUserInfo()
+    gettingMenu()
+
 
     // split schedule. get two parts. before - and after (including -). Add "hrs" to both of them at the end of each. 
     if (resInfo) {
@@ -36,33 +53,10 @@ const ResInfo = () => {
       setPrecios("Q." + precios[0] + ".00 - Q." + precios[1] + ".00")
     }
 
-
-
   }, [])
 
-
-  console.log("user", user)
+  console.log("menu: \n", menu)
   console.log("resInfo", resInfo)
-
-  const menu = [
-    ["Pollo Cocido", "8hrs-10hrs", "Q.50.00"],
-    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
-    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
-    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
-    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
-    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
-    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
-    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
-    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
-    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
-    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
-    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
-    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
-    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
-    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
-  ]
-
-  console.log("menu", menu)
 
   return (
     <div className={style.resInfoContainer}>
@@ -107,14 +101,20 @@ const ResInfo = () => {
       <div className={style.rightContainer}>
         <h2>Menú</h2>
         <div className={style.menuContainer}>
-          {menu.map((item, index) => (
-            <MenuItem
-              key={index}
-              name={item[0]}
-              description={item[1]}
-              price={item[2]}
-            />
-          ))}
+          {menu ? (
+            menu.map((item) => {
+              return (
+                <MenuItem
+                  key={item.dish_id}
+                  name={item.name}
+                  price={item.price}
+                  description={item.description}
+                />
+              )
+            })
+          ) : (
+            <p>Cargando Menú</p>
+          )}
         </div>
       </div>
     </div>
