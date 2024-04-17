@@ -348,7 +348,7 @@ def get_dishes(restaurant_id: str):
     if aura_response == 404:
         return {"status": 404, "message": "El restaurante no existe"}
     else:
-        return aura_response
+        return {"status": 200, "message": "Platos obtenidos exitosamente", "data": aura_response}
 
 class RestaurantLocation(BaseModel):
     restaurant_id: str

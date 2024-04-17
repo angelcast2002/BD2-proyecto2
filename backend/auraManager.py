@@ -321,13 +321,13 @@ class AuraNeo4j:
     def _search_sells_relationship(tx: Transaction, restaurant_id: str):
         search_query = (
             "MATCH (r:Restaurant {user_id: $restaurant_id})-[s:SELLS]->(d:Dish) "
-            "RETURN d.name AS dish_name"
+            "RETURN d"
         )
         try:
-            result = tx.run(search_query, restaurant_id=restaurant_id)
-            return [record["dish_name"] for record in result]
+            response = tx.run(search_query, restaurant_id=restaurant_id)
+            return [record[0] for record in response]
         except Exception as e:
-            return None
+            return 404
 
     
     
