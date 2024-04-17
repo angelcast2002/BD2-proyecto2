@@ -3,7 +3,7 @@ import style from "./AddVisit.module.css"
 
 const AddVisit = () => {
   return (
-    <div className={style.AddVisit}>
+    <div className={style.mainContainer}>
       <h1>AddVisit</h1>
     </div>
   )

@@ -8,7 +8,7 @@ export default createRouter([
   ["/recommendations", () => ({ page: "recommendations" })],
   ["/setsettings", () => ({ page: "setsettings" })],
   ["/resinfo", () => ({ page: "resinfo" })],
-  ["/dishinfo", () => ({ page: "dishinfo" })]
+  ["/dishinfo", () => ({ page: "dishinfo" })],
   ["/addvisit", () => ({ page: "addvisit" })]
 
 
