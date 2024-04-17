@@ -8,6 +8,8 @@ import ComponentInput from "../../components/Input/Input"
 import TextAreaAuto from "../../components/textAreaAutosize/TextAreaAuto"
 import ValueList from "../../components/ValueList/ValueList"
 import Button from "../../components/Button/Button"
+import Header from "../../components/Header/Header"
+
 
 const AddVisit = ({ restaurant_id }) => {
 
@@ -99,69 +101,72 @@ const AddVisit = ({ restaurant_id }) => {
 
   return (
     <div className={style.mainContainer}>
-      <div className={style.upContainer}>
-        <div className={style.imgContainer}>
-          <img
-            src={
-              resInfo
-                ? resInfo.imagen
-                : "https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg"
-            }
-            alt="Imagen del restaurante"
-          />
+      <Header />
+      <div className={style.mainContainer2}>
+        <div className={style.upContainer}>
+          <div className={style.imgContainer}>
+            <img
+              src={
+                resInfo
+                  ? resInfo.imagen
+                  : "https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg"
+              }
+              alt="Imagen del restaurante"
+            />
+          </div>
+          <div className={style.resInfoContainer}>
+            <h1>{resInfo && resInfo.name}</h1>
+          </div>
         </div>
-        <div className={style.resInfoContainer}>
-          <h1>{resInfo && resInfo.name}</h1>
-        </div>
-      </div>
 
-      <div className={style.downContainer}>
-        <div className={style.numberInputs}>
-          <div className={style.totalInputCont}>
-            <span>Ingresa el total de la factura</span>
-            <ComponentInput
-              type="number"
-              placeholder="Total"
-              name="total"
-              value={total}
+        <div className={style.downContainer}>
+          <div className={style.numberInputs}>
+            <div className={style.totalInputCont}>
+              <span>Ingresa el total de la factura</span>
+              <ComponentInput
+                type="number"
+                placeholder="Total"
+                name="total"
+                value={total}
+                onChange={handleInputVal}
+              />
+            </div>
+            <div className={style.ratingInputCont}>
+              <span>Ingresa tu calificación</span>
+              <ComponentInput
+                type="number"
+                placeholder="Rating"
+                name="rating"
+                value={rating}
+                onChange={handleInputVal}
+              />
+            </div>
+          </div>
+          <div className={style.commentInputCont}>
+            <span>Ingresa un comentario</span>
+            <TextAreaAuto
+              placeholder="Comentario"
+              name="comment"
+              value={comment}
+              maxRows={8}
               onChange={handleInputVal}
             />
           </div>
-          <div className={style.ratingInputCont}>
-            <span>Ingresa tu calificación</span>
-            <ComponentInput
-              type="number"
-              placeholder="Rating"
-              name="rating"
-              value={rating}
-              onChange={handleInputVal}
-            />
+          <div className={style.selectDishesContainer}>
+            <span>Elige el platillo o platillos que has consumido</span>
+            {dishes && (
+              <ValueList
+                options={dishes.map((dish) => dish.name)}
+                value={selectedDishes}
+                onChange={handleChangeDishes}
+                placeholder="Platillos"
+                multiple
+              />
+            )}
           </div>
-        </div>
-        <div className={style.commentInputCont}>
-          <span>Ingresa un comentario</span>
-          <TextAreaAuto
-            placeholder="Comentario"
-            name="comment"
-            value={comment}
-            maxRows={8}
-            onChange={handleInputVal}
-          />
-        </div>
-        <div className={style.selectDishesContainer}>
-          <span>Elige el platillo o platillos que has consumido</span>
-          {dishes && (
-            <ValueList
-              options={dishes.map((dish) => dish.name)}
-              value={selectedDishes}
-              onChange={handleChangeDishes}
-              placeholder="Platillos"
-              multiple
-            />
-          )}
-        </div>
-        <div className={style.submitBtnContainer}>
-          <Button label="Agregar visita" onClick={handleAddVisit} />
+          <div className={style.submitBtnContainer}>
+            <Button label="Agregar visita" onClick={handleAddVisit} />
+          </div>
         </div>
       </div>
     </div>
