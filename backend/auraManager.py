@@ -1186,18 +1186,19 @@ class AuraNeo4j:
         except Exception as e:
             return None
         
-
-    # admin puede ejecutar un query sobre la base de datos. # obtener los resultados y devolverlos. 
-    def execute_query(self, query: str):
+    #metodo para ejecutar un query
+    def run_query(self, query: str):
         with self.driver.session() as session:
-            return session.write_transaction(self._execute_query, query)
-        
+            return session.read_transaction(self._run_query, query)
+    
     @staticmethod
-    def _execute_query(tx: Transaction, query: str):
+    def _run_query(tx: Transaction, query: str):
         try:
-            return tx.run(query)
+            response = tx.run(query)
+            return 200, [record for record in response]
         except Exception as e:
-            return 400
+            return 400, e
+        
         
         
         

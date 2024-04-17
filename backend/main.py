@@ -578,6 +578,14 @@ def delete_dish_ingredients_cook_temperature(dish_name: str):
     if aura_response == 404:
         raise HTTPException(status_code=404, detail="Dish not found")
     return {"status": 200, "message": "Dish ingredients cook temperature deleted successfully"}
+
+@app.get("/admin/execute_query")
+def run_query(query: str):
+    aura_response, e = aura.run_query(query)
+    if aura_response == 400:
+        return {"status": 400, "message": f"Error al ejecutar la query: {e}"}
+    else:
+        return {"status": 200, "message": "Query ejecutada exitosamente", "data": e}
     
 @app.get("/diner/recommend")
 def recommend_dishes(user_id: str, limit: int):
@@ -588,14 +596,7 @@ def recommend_dishes(user_id: str, limit: int):
         return {"status": 400, "message": "Error obteniendo las recomendaciones"}
     else:
         return {"status": 200, "message": "Recomendaciones creadas exitosamente", "data": aura_response}
-    
-@app.post("/admin/execute_query")
-def execute_query(query: str):
-    aura_response = aura.execute_query(query)
-    if aura_response == 400:
-        return {"status": 400, "message": "Error ejecutando la query"}
-    else:
-        return {"status": 200, "message": "Query ejecutada exitosamente", "data": aura_response}
+
     
 # Para correrlo en local
 if __name__ == "__main__":
