@@ -1186,6 +1186,21 @@ class AuraNeo4j:
         except Exception as e:
             return None
         
+
+    # admin puede ejecutar un query sobre la base de datos. # obtener los resultados y devolverlos. 
+    def execute_query(self, query: str):
+        with self.driver.session() as session:
+            return session.write_transaction(self._execute_query, query)
+        
+    @staticmethod
+    def _execute_query(tx: Transaction, query: str):
+        try:
+            return tx.run(query)
+        except Exception as e:
+            return 400
+        
+        
+        
         
 def sistema_recomendacion(user_id: str, limit: int = 20):
     aura = AuraNeo4j()
@@ -1534,20 +1549,22 @@ def fill_db_restaurant_has_delivery():
         }
         aura.restaurant_has_delivery(relationship)
 
+
+
 if __name__ == "__main__":
     #fill_db_ingredients()    
     #fill_db_dishes()
     #fill_db_dish_ingredients()
-    fill_db_restaurants()
+    #fill_db_restaurants()
     #fill_db_restaurant_dishes()
     #fill_db_restaurant_locations()
     #fill_db_parkings()
     #fill_db_restaurant_parkings()
     #fill_db_parking_locations()
-    fill_db_users()
+    #fill_db_users()
     #sistema_recomendacion("cas21700@uvg.edu.gt")
     #fill_db_diner_restaurants()
     #fill_db_diner_on_restaurants()
     #fill_db_diner_dish_opinion()
     #fill_db_restaurant_has_delivery()
-    
+    print("hello world")

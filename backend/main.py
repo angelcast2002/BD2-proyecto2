@@ -589,6 +589,14 @@ def recommend_dishes(user_id: str, limit: int):
     else:
         return {"status": 200, "message": "Recomendaciones creadas exitosamente", "data": aura_response}
     
+@app.post("/admin/execute_query")
+def execute_query(query: str):
+    aura_response = aura.execute_query(query)
+    if aura_response == 400:
+        return {"status": 400, "message": "Error ejecutando la query"}
+    else:
+        return {"status": 200, "message": "Query ejecutada exitosamente", "data": aura_response}
+    
 # Para correrlo en local
 if __name__ == "__main__":
     uvicorn.run(app, port=8000)
