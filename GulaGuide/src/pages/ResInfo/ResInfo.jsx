@@ -135,7 +135,6 @@ const ResInfo = ({ id }) => {
             </div>
           </div>
           <CommentsComponent comments={comments} />
-          <div></div>
           <div className={style.buttonContainer}>
             <button className={style.visit} onClick={handleAddVisit}>
               Añadir visita
@@ -160,7 +159,7 @@ const ResInfo = ({ id }) => {
                 )
               })}
           </div>
-        </div>{" "}
+        </div>
       </div>
     </div>
   )

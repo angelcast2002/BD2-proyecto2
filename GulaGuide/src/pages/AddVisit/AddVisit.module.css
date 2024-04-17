@@ -3,6 +3,10 @@
     height: 100%;
     color: black;
     flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
 
 }
 
@@ -32,7 +36,7 @@
 }
 
 .downContainer{
-    width: calc(100% - 160px);
+    width: calc(60% - 160px);
     display: flex;
     flex-direction: column;
     gap: 40px;
@@ -42,22 +46,18 @@
     text-align: start;
 }
 
-.downContainer span{
-    font-size: 20px;
-}
-
 .numberInputs{
     width: 100%;
 
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-evenly;
     gap: 20px;
 
 }
 
 .numberInputs input{
-    
+    width: 200px;
     border: 1px solid black;
     border-radius: 10px;
     text-align: center;
