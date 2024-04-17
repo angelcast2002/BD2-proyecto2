@@ -45,7 +45,7 @@ const ResInfo = () => {
   console.log("resInfo", resInfo)
 
   const menu = [
-    ["nombre plato", "8hrs-10hrs", "Q.50.00"],
+    ["Pollo Cocido", "8hrs-10hrs", "Q.50.00"],
     ["nombre plato", "8hrs-10hrs", "Q.50.00"],
     ["nombre plato", "8hrs-10hrs", "Q.50.00"],
     ["nombre plato", "8hrs-10hrs", "Q.50.00"],
