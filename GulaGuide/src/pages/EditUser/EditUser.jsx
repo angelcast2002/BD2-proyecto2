@@ -6,9 +6,7 @@ import { Checkbox } from "@mui/material"
 import useApi from "../../Hooks/useApi"
 import { set } from "date-fns"
 import Button from "../../components/Button/Button"
-
-
-
+import Header from "../../components/Header/Header"
 
 const EditUser = () => {
 
@@ -169,6 +167,7 @@ const EditUser = () => {
 
   return (
     <div className={style.editUserContainer}>
+      <Header />
       <div className={style.mainContainer}>
         <div className={style.imgContainer}>
           <img src={pfp} alt="profile picture" />
