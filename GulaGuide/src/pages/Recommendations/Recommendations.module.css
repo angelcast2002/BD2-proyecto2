@@ -1,0 +1,27 @@
+.container {
+  width: 100%;
+  height: 100%;
+}
+
+.infoContainer {
+  display: flex;
+  flex-direction: row;
+  color: black;
+  width: 100%;
+}
+
+.filtrosContainer {
+  display: flex;
+  flex-direction: row;
+  width: calc(20% - 40px);
+  padding: 20px;
+}
+
+.recommendationsContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: calc(80% - 40px);
+  justify-content: space-between;
+  padding: 20px;
+}
