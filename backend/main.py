@@ -374,6 +374,15 @@ class restaurant_parking(BaseModel):
     free_hours: int
     exclusive: bool
 
+@app.get("/restaurant/location")
+def get_restaurant_location(restaurant_id: str):
+    aura_response = aura.serach_restaurant_location(restaurant_id)
+    if aura_response == 404:
+        return {"status": 404, "message": "El restaurante no existe o no tiene locacion asociada"}
+    else:
+        # parsear la respuesta para que todo se retorne en un json.
+        return {"status": 200, "message": "Locacion obtenida exitosamente", "data": aura_response}
+
 @app.post("/restaurant/parking")
 def restaurant_parking(restaurant_parking: restaurant_parking):
     aura_response = aura.restaurant_has_parking(restaurant_parking.model_dump())

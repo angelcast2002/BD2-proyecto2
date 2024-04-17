@@ -293,6 +293,25 @@ class AuraNeo4j:
             return tx.run(search_query, **relationship).single()[0]
         except Exception as e:
             return 400
+    
+    def serach_restaurant_location(self, restaurant_id: str):
+        with self.driver.session() as session:
+            return session.read_transaction(self._serach_restaurant_location, restaurant_id)
+        
+    @staticmethod
+    def _serach_restaurant_location(tx: Transaction, restaurant_id: str):
+        search_query = (
+            "MATCH (r:Restaurant {user_id: $restaurant_id})-[li:LOCATED_IN]->(l:Location) "
+            "RETURN li"
+        )
+        try:
+            response = tx.run(search_query, restaurant_id=restaurant_id).single()
+            if response is not None:
+                return response[0]
+            else:
+                return 404
+        except Exception as e:
+            return 400
 
     def search_sells_relationship(self, restaurant_id: str):
         with self.driver.session() as session:
@@ -602,6 +621,8 @@ class AuraNeo4j:
             return 200
         except Exception as e:
             return 404
+        
+    
 
         
     
