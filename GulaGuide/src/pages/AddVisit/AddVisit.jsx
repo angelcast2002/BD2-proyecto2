@@ -9,6 +9,8 @@ import TextAreaAuto from "../../components/textAreaAutosize/TextAreaAuto"
 import ValueList from "../../components/ValueList/ValueList"
 import Button from "../../components/Button/Button"
 import Header from "../../components/Header/Header"
+import Popup from "../../components/Popup/Popup"
+import { navigate } from "../../store"
 
 
 const AddVisit = ({ restaurant_id }) => {
@@ -24,6 +26,10 @@ const AddVisit = ({ restaurant_id }) => {
   const [rating, setRating] = useState("")
   const [comment, setComment] = useState("")
   const [selectedDishes, setSelectedDishes] = useState([])
+
+  const [error, setError] = useState("")
+  const [warning, setWarning] = useState(false)
+  const [typeError, setTypeError] = useState("")
 
   const getResInfo = async () => {
     let res
@@ -70,14 +76,6 @@ const AddVisit = ({ restaurant_id }) => {
   }
 
   const handleAddVisit = async () => {
-    console.log("Agregando visita")
-    console.log("user_id", user_id)
-    console.log("restaurant_id", restaurant_id)
-    console.log("selectedDishes", selectedDishes)
-    console.log("total", total)
-    console.log("rating", rating)
-    console.log("comment", comment)
-
     const response = await api.handleRequest(
       "POST",
       "diner/visit",
@@ -92,7 +90,18 @@ const AddVisit = ({ restaurant_id }) => {
       }
     )
     const data = await response
-    console.log("data de la visita ->", data)
+    if (data.status === 200) {
+      setError("Visita añadida correctamente")
+      setTypeError(3)
+      setWarning(true)
+      setTimeout(() => {
+        navigate(`/resinfo/${restaurant_id}`)
+      }, 5000)
+    } else {
+      setError("Hubo un error al añadir la visita")
+      setTypeError(1)
+      setWarning(true)
+    }
   }
 
   const handleChangeDishes = (e, newValue) => {
@@ -102,6 +111,12 @@ const AddVisit = ({ restaurant_id }) => {
   return (
     <div className={style.mainContainer}>
       <Header />
+      <Popup
+        message={error}
+        status={warning}
+        style={typeError}
+        close={() => setWarning(false)}
+      />
       <div className={style.mainContainer2}>
         <div className={style.upContainer}>
           <div className={style.imgContainer}>

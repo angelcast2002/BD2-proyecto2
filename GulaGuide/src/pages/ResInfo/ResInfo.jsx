@@ -8,6 +8,7 @@ import CommentsComponent from "../../components/CommentsComponent/CommentsCompon
 import MenuItem from "../../components/MenuItem/MenuItem"
 import Loader from "../../components/Loader/Loader"
 import Header from "../../components/Header/Header"
+import Popup from "../../components/Popup/Popup"
 import { navigate } from "../../store"
 
 const ResInfo = ({ id }) => {
@@ -21,6 +22,10 @@ const ResInfo = ({ id }) => {
   const [precios, setPrecios] = useState("")
   const [location, setLocation] = useState("")
   const [comments, setComments] = useState(null)
+
+  const [error, setError] = useState("")
+  const [warning, setWarning] = useState(false)
+  const [typeError, setTypeError] = useState("")
 
   const formatData = (data) => {
     let horario = data.schedule.split("-")
@@ -87,15 +92,53 @@ const ResInfo = ({ id }) => {
   const handleAddFavorite = async () => {
     // aqui se maneja añadir a favoritos
     console.log("Presionando añadir a favoritos")
-    console.log(resInfo)
-    console.log(menu)
-    console.log(location)
-    console.log(comments)
+    console.log(user.id_user)
+    console.log(restaurant_id)
+
+    // se llamará a POST diner/on_restaurant 
+    /**
+      {
+        "diner_id": "string", <- ya lo tengo
+        "restaurant_id": "string", <- ya lo tengo
+        "its_fav": true, <- default true
+        "user_likes": true, <- default true
+        "comments": "string" <- default ""
+      }
+     */
+
+    const response = await api.handleRequest(
+      "POST",
+      "diner/on_restaurant",
+      {
+        diner_id: user.id_user,
+        restaurant_id: restaurant_id,
+        its_fav: true,
+        user_likes: true,
+        comments: ""
+      }
+    )
+    const data = await response
+    console.log("data del favorito ->", data)
+    if (data.status === 200) {
+      setError("Añadido a favoritos")
+      setTypeError(3)
+      setWarning(true)
+    } else {
+      setError("No se pudo añadir a favoritos")
+      setTypeError(1)
+      setWarning(true)
+    }
   }
 
   return (
     <div className={style.mainContainer}>
       <Header />
+      <Popup
+        message={error}
+        status={warning}
+        style={typeError}
+        close={() => setWarning(false)}
+      />
       <div className={style.resInfoContainer}>
         <div className={style.leftContainer}>
           <div className={style.imgContainer}>
