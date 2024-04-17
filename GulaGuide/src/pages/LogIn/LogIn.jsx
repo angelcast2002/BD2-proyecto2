@@ -48,7 +48,9 @@ const LogIn = () => {
       setTypeError(3)
       setWarning(true)
       setTimeout(() => {
-        navigate("/recommendations")
+        if (datos.role === "Diner") navigate("/recommendations")
+        else
+        navigate("/edituser")
       }, 5000)
     } else if (datos.status === 400) {
       setError(datos.message)

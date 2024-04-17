@@ -115,7 +115,7 @@ const SignUp = () => {
           imagen: url,
         })
         dispatch("user/config", {
-          role: "restaurant",
+          role: "Restaurant",
           id_user: email,
         })
       } else {
@@ -130,7 +130,7 @@ const SignUp = () => {
           image: url,
         })
         dispatch("user/config", {
-          role: "diner",
+          role: "Diner",
           id_user: email,
         })
       }

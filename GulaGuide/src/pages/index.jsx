@@ -10,6 +10,8 @@ import SetSettings from "./SetSettings/SetSettings"
 import ResInfo from "./ResInfo/ResInfo"
 import DishInfo from "./DishInfo/DishInfo"
 import AddVisit from "./AddVisit/AddVisit"
+import AddDish from "./AddDish/AddDish"
+import AddParking from "./AddParking/AddParking"
 
 const Page = () => {
   const { [routerKey]: route } = useStoreon(routerKey)
@@ -42,6 +44,12 @@ const Page = () => {
       break
     case "addvisit":
       Component = <AddVisit />
+      break
+    case "adddish":
+      Component = <AddDish />
+      break
+    case "addparking":
+      Component = <AddParking />
       break
     default:
       Component = <h1>404 Error</h1>

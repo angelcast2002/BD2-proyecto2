@@ -11,13 +11,30 @@ const handleClick = () => {
 export const Header = () => {
   const { user } = useStoreon("user")
   const { role } = user
-
+  console.log("role", role)
+  console.log(user === "diner")
   return (
     <div className={style.mainContainer}>
       <div className={style.actions}>
         <a href="/edituser">Perfil</a>
-        <a href="/recommendations" style={role === "diner" ? {display: 'none'} : {}}>Recomendaciones</a>
-        <a href="/createnodes" style={role === "diner" ? {} : {display: 'none'}}>Crear entidades</a>
+        <a
+          href="/recommendations"
+          style={role === "Diner" ? { display: "block" } : { display: "none" }}
+        >
+          Recomendaciones
+        </a>
+        <a
+          href="/createnodes"
+          style={role === "Diner" ? { display: "none" } : { display: "block" }}
+        >
+          Agregar plato
+        </a>
+        <a
+          href="/createnodes"
+          style={role === "Diner" ? { display: "none" } : { display: "block" }}
+        >
+          Agregar parqueo
+        </a>
       </div>
       <div className={style.buttonLogoutMobile} onClick={handleClick}>
         <LuLogOut size={30} style={{ color: "#000" }} />

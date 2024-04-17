@@ -109,7 +109,8 @@ const SignUp = () => {
         setWarning(true)
         setTimeout(() => {
           setIsLoading(false)
-          navigate("/recommendations")
+          if (user.role === "Restaurant") navigate("/edituser")
+          else navigate("/recommendations")
         }, 5000)
       } else if (data.status === 404) {
         setError(data.message)
@@ -202,11 +203,7 @@ const SignUp = () => {
               </div>
             </div>
             <div className={style.buttonContainer}>
-              <Button
-                label="Continuar"
-                onClick={handleSignUp}
-                size={"75%"}
-              />
+              <Button label="Continuar" onClick={handleSignUp} size={"75%"} />
             </div>
           </div>
         </div>

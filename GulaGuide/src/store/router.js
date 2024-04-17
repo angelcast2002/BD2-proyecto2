@@ -10,4 +10,6 @@ export default createRouter([
   ["/resinfo/*", (id) => ({ page: "resinfo", props: { id } })],
   ["/dishinfo", () => ({ page: "dishinfo" })],
   ["/addvisit", () => ({ page: "addvisit" })],
+  ["/adddish", () => ({ page: "adddish" })],
+  ["/addparking", () => ({ page: "addparking" })],
 ])
