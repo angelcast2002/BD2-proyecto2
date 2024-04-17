@@ -27,6 +27,9 @@ const DishInfo = () => {
   }, [])
 
   console.log("dish_info", dish_info)
+  
+
+
 
   /**
    * has_alcohol
