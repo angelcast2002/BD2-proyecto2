@@ -15,7 +15,7 @@ const InfoTab = ({
       <img src={image} alt="restaurant" />
     </div>
     <div className={styles.infoContainer}>
-      <h1>{title}</h1>
+      <h3>{title}</h3>
       <div className={styles.info}>
         <p>{rangePrices}</p>
         <p>{recomendations}</p>

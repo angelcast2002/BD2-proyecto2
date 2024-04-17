@@ -1,23 +1,23 @@
-.container{
+.container {
     display: flex;
     flex-direction: column;
     border-radius: 10px;
-    background-color: #333333;
+    background-color: #6f6d6d;
     color: #fff;
     margin-bottom: 20px;
-    border: 1px solid #d6d6d6;
     padding: 20px;
     box-sizing: border-box;
-    width: calc(100%/2 - 20px);
+    width: calc(100%/3 - 20px);
     transition: all 0.3s ease;
     cursor: pointer;
+    gap: 20px;
 }
 
-.container:hover{
-    box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+.container:hover {
+    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
 }
 
-.infoContainer{
+.infoContainer {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -28,17 +28,15 @@
     color: #333333;
 }
 
-.imageContainer{
+.imageContainer {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    margin-bottom: 10px;
 }
 
-.imageContainer img{
-    width: 100%;
-    height: auto;
+.imageContainer img {
+    width: 80%;
     border-radius: 10px;
 }
 
@@ -47,11 +45,20 @@
     box-sizing: border-box;
 }
 
-@media screen and (max-width: 768px){
-    .container{
+.infoContainer h3 {
+    font-size: 2rem;
+}
+
+.infoContainer p {
+    font-size: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+    .container {
         width: 100%;
     }
-    .containerinfosecond{
+
+    .containerinfosecond {
         flex-direction: column;
         gap: 20px;
     }
