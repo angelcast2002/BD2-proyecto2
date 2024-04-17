@@ -9,7 +9,7 @@ export default createRouter([
   ["/setsettings", () => ({ page: "setsettings" })],
   ["/resinfo/*", (id) => ({ page: "resinfo", props: { id } })],
   ["/dishinfo", () => ({ page: "dishinfo" })],
-  ["/addvisit", () => ({ page: "addvisit" })],
+  ["/addvisit/*", (restaurant_id) => ({ page: "addvisit", props: { restaurant_id }})],
   ["/adddish", () => ({ page: "adddish" })],
   ["/addparking", () => ({ page: "addparking" })],
 ])

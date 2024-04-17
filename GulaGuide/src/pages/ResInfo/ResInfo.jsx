@@ -8,6 +8,7 @@ import CommentsComponent from "../../components/CommentsComponent/CommentsCompon
 import MenuItem from "../../components/MenuItem/MenuItem"
 import Loader from "../../components/Loader/Loader"
 import Header from "../../components/Header/Header"
+import { navigate } from "../../store"
 
 const ResInfo = ({ id }) => {
   const restaurant_id = id
@@ -80,7 +81,7 @@ const ResInfo = ({ id }) => {
 
   const handleAddVisit = async () => {
     // aqui se maneja ir hacia la página de añadir visita
-    console.log("Presionando añadir visita")
+    navigate(`/addvisit/${restaurant_id}`)
   }
 
   const handleAddFavorite = async () => {

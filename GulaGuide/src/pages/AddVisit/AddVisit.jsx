@@ -9,12 +9,12 @@ import TextAreaAuto from "../../components/textAreaAutosize/TextAreaAuto"
 import ValueList from "../../components/ValueList/ValueList"
 import Button from "../../components/Button/Button"
 
-const AddVisit = (restaurant_id) => {
-  restaurant_id = "bruegger's_4@gmail.com"
-  const user_id = "estegonz@gmail.com"
+const AddVisit = ({ restaurant_id }) => {
 
   const api = useApi()
   const { user } = useStoreon("user")
+  const user_id = user.id_user
+
   const [resInfo, setResInfo] = useState(null)
   const [dishes, setDishes] = useState(null)
 
@@ -25,11 +25,13 @@ const AddVisit = (restaurant_id) => {
 
   const getResInfo = async () => {
     let res
+    console.log("entro")
     res = await api.handleRequest(
       "GET",
       "get/restaurant?restaurant_id=" + restaurant_id
     )
     const data = await res
+    console.log("data res info", data)
     setResInfo(data[0])
   }
 
@@ -48,9 +50,6 @@ const AddVisit = (restaurant_id) => {
     getResDishes()
   }, [])
 
-  console.log("restaurante info\n", resInfo)
-  console.log("dishes\n", dishes)
-
   const handleInputVal = (e) => {
     const { name } = e.target
     switch (name) {
@@ -67,23 +66,6 @@ const AddVisit = (restaurant_id) => {
         break
     }
   }
-
-
-
-  /**
-   * Esto es lo que debe llevar el body de la petición POST para agregar una visita:
-    {
-      "user_id": "string",
-      "restaurant_id": "string",
-      "dishes": [
-        "string"
-      ],
-      "date": "2024-04-17T07:04:46.822Z",
-      "total": 0,
-      "rating": 0,
-      "comment": "string"
-    }
-   */
 
   const handleAddVisit = async () => {
     console.log("Agregando visita")

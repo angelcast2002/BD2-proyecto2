@@ -43,7 +43,7 @@ const Page = () => {
       Component = <DishInfo />
       break
     case "addvisit":
-      Component = <AddVisit />
+      Component = <AddVisit restaurant_id={route.match.props.restaurant_id}/>
       break
     case "adddish":
       Component = <AddDish />
