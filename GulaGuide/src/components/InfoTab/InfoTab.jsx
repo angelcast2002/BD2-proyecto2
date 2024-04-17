@@ -9,8 +9,9 @@ const InfoTab = ({
   recomendations,
   location,
   schedule,
+  onClick,
 }) => {
-  return <div className={styles.container}>
+  return <div className={styles.container} onClick={onClick}>
     <div className={styles.imageContainer}>
       <img src={image} alt="restaurant" />
     </div>

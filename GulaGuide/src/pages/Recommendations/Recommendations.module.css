@@ -3,6 +3,22 @@
   height: 100%;
 }
 
+.loaderContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.noResultsContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
 .infoContainer {
   display: flex;
   flex-direction: row;
@@ -12,9 +28,10 @@
 
 .filtrosContainer {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   width: calc(20% - 40px);
   padding: 20px;
+  gap: 20px;
 }
 
 .recommendationsContainer {
@@ -24,4 +41,23 @@
   width: calc(80% - 40px);
   justify-content: space-between;
   padding: 20px;
+}
+
+.filterContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.filterContainer span {
+  padding-left: 5px;
+  font-weight: bold;
+  text-align: start;
+}
+
+.filtersButtonContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
 }
