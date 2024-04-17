@@ -63,3 +63,16 @@
   justify-content: space-between;
   gap: 10px;
 }
+
+.selectDishesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: antiquewhite;
+}
+
+.submitBtnContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

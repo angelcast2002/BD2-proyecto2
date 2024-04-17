@@ -6,17 +6,22 @@ import { useEffect } from "react"
 import { useStoreon } from "storeon/react"
 import ComponentInput from "../../components/Input/Input"
 import TextAreaAuto from "../../components/textAreaAutosize/TextAreaAuto"
+import ValueList from "../../components/ValueList/ValueList"
+import Button from "../../components/Button/Button"
 
 const AddVisit = (restaurant_id) => {
-  restaurant_id = "Pizza Hut"
+  restaurant_id = "bruegger's_4@gmail.com"
+  const user_id = "estegonz@gmail.com"
 
   const api = useApi()
   const { user } = useStoreon("user")
   const [resInfo, setResInfo] = useState(null)
+  const [dishes, setDishes] = useState(null)
 
   const [total, setTotal] = useState("")
   const [rating, setRating] = useState("")
   const [comment, setComment] = useState("")
+  const [selectedDishes, setSelectedDishes] = useState([])
 
   const getResInfo = async () => {
     let res
@@ -28,11 +33,23 @@ const AddVisit = (restaurant_id) => {
     setResInfo(data[0])
   }
 
+  const getResDishes = async () => {
+    let res
+    res = await api.handleRequest(
+      "GET",
+      "restaurant/dishes?restaurant_id=" + restaurant_id
+    )
+    const data = await res
+    setDishes(data.data)
+  }
+
   useEffect(() => {
     getResInfo()
+    getResDishes()
   }, [])
 
-  console.log(resInfo)
+  console.log("restaurante info\n", resInfo)
+  console.log("dishes\n", dishes)
 
   const handleInputVal = (e) => {
     const { name } = e.target
@@ -52,41 +69,72 @@ const AddVisit = (restaurant_id) => {
   }
 
 
-    /**
-     * Esto es lo que debe llevar el body de la petición POST para agregar una visita:
+
+  /**
+   * Esto es lo que debe llevar el body de la petición POST para agregar una visita:
+    {
+      "user_id": "string",
+      "restaurant_id": "string",
+      "dishes": [
+        "string"
+      ],
+      "date": "2024-04-17T07:04:46.822Z",
+      "total": 0,
+      "rating": 0,
+      "comment": "string"
+    }
+   */
+
+  const handleAddVisit = async () => {
+    console.log("Agregando visita")
+    console.log("user_id", user_id)
+    console.log("restaurant_id", restaurant_id)
+    console.log("selectedDishes", selectedDishes)
+    console.log("total", total)
+    console.log("rating", rating)
+    console.log("comment", comment)
+
+    const response = await api.handleRequest(
+      "POST",
+      "diner/visit",
       {
-        "user_id": "string",
-        "restaurant_id": "string",
-        "dishes": [
-          "string"
-        ],
-        "date": "2024-04-17T07:04:46.822Z",
-        "total": 0,
-        "rating": 0,
-        "comment": "string"
+        user_id: user_id,
+        restaurant_id: restaurant_id,
+        dishes: selectedDishes,
+        date: new Date(),
+        total: total,
+        rating: rating,
+        comment: comment
       }
-     */
+    )
+    const data = await response
+    console.log("data de la visita ->", data)
+  }
 
-    return (
-      <div className={style.mainContainer}>
-        <div className={style.upContainer}>
-          <div className={style.imgContainer}>
-            <img
-              src={
-                resInfo
-                  ? resInfo.imagen
-                  : "https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg"
-              }
-              alt="Imagen del restaurante"
-            />
-          </div>
-          <div className={style.resInfoContainer}>
-            <h1>{resInfo && resInfo.name}</h1>
-          </div>
+  const handleChangeDishes = (e, newValue) => {
+    setSelectedDishes(newValue);
+  }
+
+  return (
+    <div className={style.mainContainer}>
+      <div className={style.upContainer}>
+        <div className={style.imgContainer}>
+          <img
+            src={
+              resInfo
+                ? resInfo.imagen
+                : "https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg"
+            }
+            alt="Imagen del restaurante"
+          />
         </div>
+        <div className={style.resInfoContainer}>
+          <h1>{resInfo && resInfo.name}</h1>
+        </div>
+      </div>
 
-        <div className={style.downContainer}>
-          <div className={style.numberInputs}>
+      <div className={style.downContainer}>
+        <div className={style.numberInputs}>
           <div className={style.totalInputCont}>
             <span>Ingresa el total de la factura</span>
             <ComponentInput
@@ -107,20 +155,35 @@ const AddVisit = (restaurant_id) => {
               onChange={handleInputVal}
             />
           </div>
-          </div>
-          <div className={style.commentInputCont}>
-            <span>Ingresa un comentario</span>
-            <TextAreaAuto
-              placeholder="Comentario"
-              name="comment"
-              value={comment}
-              maxRows={8}
-              onChange={handleInputVal}
+        </div>
+        <div className={style.commentInputCont}>
+          <span>Ingresa un comentario</span>
+          <TextAreaAuto
+            placeholder="Comentario"
+            name="comment"
+            value={comment}
+            maxRows={8}
+            onChange={handleInputVal}
+          />
+        </div>
+        <div className={style.selectDishesContainer}>
+          <span>Elige el platillo o platillos que has consumido</span>
+          {dishes && (
+            <ValueList
+              options={dishes.map((dish) => dish.name)}
+              value={selectedDishes}
+              onChange={handleChangeDishes}
+              placeholder="Platillos"
+              multiple
             />
-          </div>
+          )}
+        </div>
+        <div className={style.submitBtnContainer}>
+          <Button label="Agregar visita" onClick={handleAddVisit} />
         </div>
       </div>
-    )
-  }
+    </div>
+  )
+}
 
-  export default AddVisit
+export default AddVisit
