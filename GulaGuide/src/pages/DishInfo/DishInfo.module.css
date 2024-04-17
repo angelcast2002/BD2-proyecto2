@@ -14,7 +14,7 @@
     text-align: start;
     justify-content: center;
     align-items: flex-start;
-    width: 50%;
+    width: 60%;
     height: 100%;
     gap: 15px;
     background-color: rgb(148, 189, 15);
@@ -35,7 +35,7 @@
     flex-direction: column;
     justify-content: center;
     
-    width: 50%;
+    width: 40%;
     height: 100%;
     color: black;
 
@@ -51,4 +51,12 @@
 
 .ingredientsText h1{
     text-align: center;
+}
+
+.ingredientsList {
+    display: flow;
+    gap: 10px;
+    padding: 0 20px;
+    height: 50%;
+    overflow-y: auto;
 }
