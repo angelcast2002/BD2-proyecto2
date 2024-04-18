@@ -1,0 +1,13 @@
+name,description,is_vegan,avg_price,has_alcohol
+Ensalada de Quinoa,"Una fresca ensalada de quinoa con vegetales frescos y aderezo de limón.",true,65,false
+Sopa de Lentejas,"Una reconfortante sopa de lentejas con vegetales y especias.",true,50,false
+Tofu a la Parrilla,"Tofu marinado a la parrilla con vegetales al vapor.",true,70,false
+Tempeh al Horno,"Tempeh marinado al horno con una salsa de soya y jengibre.",true,80,false
+Hummus de Garbanzos,"Hummus casero con garbanzos, aceite de oliva y tahini.",true,40,false
+Ensalada de Kale,"Una nutritiva ensalada de kale con aderezo de tahini.",true,60,false
+Ensalada de Algas,"Una ensalada refrescante de algas marinas con vinagreta de sésamo.",true,55,false
+Champiñones Rellenos,"Champiñones rellenos de quinoa y vegetales al horno.",true,75,false
+Moussaka Vegana,"Una versión vegana de la clásica moussaka griega con berenjena y tofu.",true,90,false
+Remolacha Asada,"Remolacha asada con queso de cabra y nueces caramelizadas.",false,80,false
+Col Rizada Salteada,"Col rizada salteada con ajo y limón.",true,45,false
+Curry de Verduras,"Un delicioso curry de verduras con leche de coco y arroz basmati.",true,70,false

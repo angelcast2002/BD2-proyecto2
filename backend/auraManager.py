@@ -1,3 +1,4 @@
+import csv
 from datetime import datetime
 import random
 from neo4j import GraphDatabase, Transaction
@@ -1198,7 +1199,68 @@ class AuraNeo4j:
             return 200, [record for record in response]
         except Exception as e:
             return 400, e
-        
+
+    def load_dishes_from_csv(self, file_path: str):
+        # Abrir el archivo CSV y leer los datos
+        with open(file_path, newline='', encoding='utf-8') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                # Construir la consulta para insertar cada fila en Neo4j
+                query = """
+                MERGE (d:Dish {name: $name, description: $description, is_vegan: $is_vegan, 
+                avg_price: $avg_price, has_alcohol: $has_alcohol}) 
+                RETURN d
+                """
+                # Ejecutar la consulta para insertar la fila actual en Neo4j
+                with self.driver.session() as session:
+                    session.write_transaction(self._run_query_csv, query, **row)
+
+        return 200
+    
+    def load_parking_from_csv(self, file_path: str):
+        # Abrir el archivo CSV y leer los datos
+        with open(file_path, newline='', encoding='utf-8') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                # Construir la consulta para insertar cada fila en Neo4j
+                #parking_id: $parking_id, price_per_hour: $price_per_hour, capacity: $capacity, handicap_friendly: $handicap_friendly, has_security: $has_security, is_covered: $is_covered
+                query = """
+                MERGE (p:Parking {parking_id: $parking_id, price_per_hour: toFloat($price_per_hour), capacity: toInteger($capacity),
+                handicap_friendly: toBoolean($handicap_friendly), has_security: toBoolean($has_security), is_covered: toBoolean($is_covered)})
+                RETURN p
+                """
+                # Ejecutar la consulta para insertar la fila actual en Neo4j
+                with self.driver.session() as session:
+                    session.write_transaction(self._run_query_csv, query, **row)
+
+        return 200
+
+    def load_ingredients_from_csv(self, file_path: str):
+        # Abrir el archivo CSV y leer los datos
+        with open(file_path, newline='', encoding='utf-8') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                # Construir la consulta para insertar cada fila en Neo4j
+                query = """
+                MERGE (i:Ingredient {name: $name, type: $type, calories: toInteger($calories), 
+                is_vegan: toBoolean($is_vegan), has_gluten: toBoolean($has_gluten)})
+                """
+                # Ejecutar la consulta para insertar la fila actual en Neo4j
+                with self.driver.session() as session:
+                    session.write_transaction(self._run_query_csv, query, **row)
+
+        return 200
+
+    # Método _run_query_csv actualizado para tomar parámetros adicionales
+    @staticmethod
+    def _run_query_csv(tx: Transaction, query: str, **row):
+        try:
+            tx.run(query, **row)
+            return 200
+        except Exception as e:
+            return 400
+
+
         
         
         
@@ -1279,7 +1341,7 @@ def fill_db_ingredients():
     aura = AuraNeo4j()
     # crear 500 ingredientes con datos random  y los name deben ser unicos
     #array de ingredientes
-    ingredients = ["Arroz", "Frijoles", "Carne", "Pollo", "Pescado", "Camarones", "Lechuga", "Tomate", "Pepino", "Cebolla", "Chile", "Pimiento", "Aguacate", "Papa", "Zanahoria", "Espinaca", "Brocoli", "Coliflor", "Calabaza", "Chayote", "Elote", "Cilantro", "Perejil", "Albahaca", "Romero", "Tomillo", "Orégano", "Canela", "Clavo", "Pimienta", "Sal", "Azúcar", "Miel", "Mostaza", "Mayonesa", "Ketchup", "Salsa de soya", "Salsa inglesa", "Salsa picante", "Salsa de tomate", "Salsa de chile", "Salsa de cacahuate", "Salsa de queso", "Salsa de champiñones", "Salsa de ostión", "Salsa de pescado", "Salsa de soya", "Salsa de tamarindo", "Salsa de tomate", "Salsa de yogur", "Salsa de manzana", "Salsa de mango", "Salsa de aguacate", "Salsa de cilantro", "Salsa de chile", "Salsa de pimienta", "Salsa de cebolla", "Salsa de ajo", "Salsa de limón", "Salsa de naranja", "Salsa de piña", "Salsa de fresa", "Salsa de frambuesa", "Salsa de zarzamora", "Salsa de arándano", "Salsa de mora", "Salsa de uva", "Salsa de durazno", "Salsa de manzana", "Salsa de pera", "Salsa de guayaba", "Salsa de ciruela", "Salsa de melocotón", "Salsa de albaricoque", "Salsa de papaya", "Salsa de mango", "Salsa de coco", "Salsa de piña", "Salsa de plátano", "Salsa de guanábana", "Salsa de naranja", "Salsa de limón", "Salsa de mandarina", "Salsa de toronja", "Salsa de lima", "Harina", "Levadura", "Aceite", "Mantequilla", "Huevo", "Leche", "Crema", "Yogur", "Queso", "Jamón", "Tocino", "Salchicha", "Chorizo", "Atún", "Sardina", "Pasta", "Arroz", "Pan", "Tortilla", "Tostada", "Galleta", "Pastel", "Helado", "Gelatina", "Flan", "Cereal", "Avena", "Granola", "Café", "Té", "Agua", "Refresco", "Jugo", "Cerveza", "Vino", "Whisky", "Ron", "Vodka", "Tequila", "Brandy", "Ginebra", "Cognac", "Champagne", "Licor", "Cerveza", "Vino", "Whisky", "Ron", "Vodka", "Tequila", "Brandy", "Ginebra", "Cognac", "Champagne", "Licor", "Cerveza", "Vino", "Whisky", "Ron", "Vodka", "Tequila", "Brandy", "Ginebra", "Cognac", "Champagne", "Licor", "Cerveza", "Vino", "Whisky", "Ron", "Vodka", "Tequila", "Brandy", "Ginebra", "Cognac", "Champagne", "Licor", "Cerveza", "Vino", "Whisky", "Ron", "Vodka", "Tequila", "Brandy", "Ginebra", "Cognac", "Champagne", "Licor", "Cerveza", "Vino", "Whisky", "Ron", "Vodka", "Tequila", "Brandy", "Ginebra", "Cognac", "Champagne", "Licor", "Cerveza", "Vino", "Whisky", "Ron", "Vodka", "Tequila", "Brandy", "Ginebra", "Cognac", "Champagne", "Licor", "Cerveza", "Vino", "Whisky", "Ron", "Vodka", "Tequila", "Brandy"]
+    ingredients = ["Quinoa", "Lentejas", "Tofu", "Tempeh", "Hummus", "Kale", "Algas marinas", "Champiñones", "Berenjena", "Remolacha", "Col rizada", "Cúrcuma", "Jengibre", "Ajo", "Cebolla morada", "Rúcula", "Rabanitos", "Zapallo", "Chía", "Linaza", "Almendras", "Nueces", "Piñones", "Cacahuetes", "Anacardos", "Avellanas", "Macadamias", "Pistachos", "Almendras", "Mantequilla de almendras", "Mantequilla de cacahuetes", "Mantequilla de nueces", "Mantequilla de anacardos", "Mantequilla de avellanas", "Mantequilla de coco", "Mantequilla de girasol", "Mantequilla de sésamo", "Mantequilla de castañas de cajú", "Mantequilla de nueces de macadamia", "Mantequilla de pistachos"]
     # crear con las propiedades: name, calories, type, has_gluten, is_vegan
     for ingredient in ingredients:
         ingredient = {
@@ -1553,7 +1615,7 @@ def fill_db_restaurant_has_delivery():
 
 
 if __name__ == "__main__":
-    #fill_db_ingredients()    
+    fill_db_ingredients()    
     #fill_db_dishes()
     #fill_db_dish_ingredients()
     #fill_db_restaurants()
@@ -1568,4 +1630,9 @@ if __name__ == "__main__":
     #fill_db_diner_on_restaurants()
     #fill_db_diner_dish_opinion()
     #fill_db_restaurant_has_delivery()
-    print("hello world")
+    #print("hello world")
+    aura = AuraNeo4j()
+    aura.load_ingredients_from_csv("./backend/csv/ingredientes.csv")
+    aura.load_dishes_from_csv("./backend/csv/dishes.csv")
+    aura.load_parking_from_csv("./backend/csv/parkings.csv")
+    

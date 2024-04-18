@@ -587,6 +587,31 @@ def run_query(query: str):
     else:
         return {"status": 200, "message": "Query ejecutada exitosamente", "data": e}
     
+@app.get("/admin/cargar_csv/ingredientes")
+def cargar_csv_ingredientes():
+    aura_response = aura.load_ingredients_from_csv("./backend/csv/ingredientes.csv")
+    if aura_response == 400:
+        return {"status": 400, "message": "Error cargando los ingredientes"}
+    else:
+        return {"status": 200, "message": "Ingredientes cargados exitosamente"}
+    
+@app.get("/admin/cargar_csv/platos")
+def cargar_csv_platos():
+    aura_response = aura.load_dishes_from_csv("./backend/csv/dishes.csv")
+    if aura_response == 400:
+        return {"status": 400, "message": "Error cargando los platos"}
+    else:
+        return {"status": 200, "message": "Platos cargados exitosamente"}
+    
+@app.get("/admin/cargar_csv/parqueos")
+def cargar_csv_parqueos():
+    aura_response = aura.load_parking_from_csv("./backend/csv/parkings.csv")
+    if aura_response == 400:
+        return {"status": 400, "message": "Error cargando los parqueos"}
+    else:
+        return {"status": 200, "message": "Parqueos cargados exitosamente"}
+    
+    
 @app.get("/diner/recommend")
 def recommend_dishes(user_id: str, limit: int):
     aura_response = sistema_recomendacion(user_id, limit)

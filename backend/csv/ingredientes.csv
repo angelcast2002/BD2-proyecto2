@@ -1,0 +1,41 @@
+name,type,calories,is_vegan,has_gluten
+Quinoa,Grano,120,true,false
+Lentejas,Legumbre,130,true,false
+Tofu,Proteína,70,true,false
+Tempeh,Proteína,200,true,false
+Hummus,Legumbre,160,true,false
+Kale,Verdura,50,true,false
+Algas marinas,Alga,45,true,false
+Champiñones,Hongo,22,true,false
+Berenjena,Verdura,25,true,false
+Remolacha,Verdura,43,true,false
+Col rizada,Verdura,49,true,false
+Cúrcuma,Especia,0,true,false
+Jengibre,Especia,80,true,false
+Ajo,Especia,4,true,false
+Cebolla morada,Verdura,42,true,false
+Rúcula,Verdura,25,true,false
+Rabanitos,Verdura,16,true,false
+Zapallo,Verdura,20,true,false
+Chía,Grano,486,true,false
+Linaza,Grano,534,true,false
+Almendras,Nuez,579,true,false
+Nueces,Nuez,654,true,false
+Piñones,Nuez,673,true,false
+Cacahuetes,Nuez,567,true,false
+Anacardos,Nuez,553,true,false
+Avellanas,Nuez,628,true,false
+Macadamias,Nuez,718,true,false
+Pistachos,Nuez,562,true,false
+Almendras,Nuez,607,true,false
+Mantequilla de almendras,Untable,614,true,false
+Mantequilla de cacahuetes,Untable,589,true,false
+Mantequilla de nueces,Untable,656,true,false
+Mantequilla de anacardos,Untable,612,true,false
+Mantequilla de avellanas,Untable,656,true,false
+Mantequilla de coco,Untable,663,true,false
+Mantequilla de girasol,Untable,584,true,false
+Mantequilla de sésamo,Untable,573,true,false
+Mantequilla de castañas de cajú,Untable,617,true,false
+Mantequilla de nueces de macadamia,Untable,718,true,false
+Mantequilla de pistachos,Untable,612,true,false

@@ -1,0 +1,15 @@
+parking_id,price_per_hour,capacity,handicap_friendly,has_security,is_covered
+Estacionamiento Principal,6.00,150,true,true,true
+Estacionamiento Norte,5.50,100,true,true,false
+Estacionamiento Sur,4.00,80,false,true,true
+Estacionamiento VIP,10.00,50,true,true,true
+Estacionamiento Centro,3.00,120,true,false,false
+Estacionamiento Este,4.50,90,false,false,true
+Estacionamiento Oeste,4.50,90,false,false,true
+Estacionamiento Poniente,4.50,90,false,false,true
+Estacionamiento Oriente,4.50,90,false,false,true
+Estacionamiento Noroeste,4.50,90,false,false,true
+Estacionamiento Suroeste,4.50,90,false,false,true
+Estacionamiento Noreste,4.50,90,false,false,true
+Estacionamiento Sureste,4.50,90,false,false,true
+Estacionamiento Centro,4.50,90,false,false,true
