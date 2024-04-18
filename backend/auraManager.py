@@ -270,13 +270,21 @@ class AuraNeo4j:
         
     @staticmethod
     def _diner_lives_in(tx: Transaction, relationship: dict):
-        search_query = (
-            "MATCH (d:Diner {user_id: $diner_id}), (l:Location {zone: $zone}) "
-            "MERGE (d)-[li:LIVES_IN {street: $street, avenue: $avenue, number: $number, community: $community, reference: $reference}]->(l) "
-            "RETURN li"
+        check_query = (
+            "MATCH (d:Diner {user_id: $diner_id})-[li:LIVES_IN]->(l:Location) "
+            "RETURN COUNT(*) AS count"
         )
         try:
-            return tx.run(search_query, **relationship).single()[0]
+            result = tx.run(check_query, **relationship).single()
+            if result["count"] > 0:
+                return 200  # O cualquier otro código de estado que desees
+            else:
+                create_query = (
+                    "MATCH (d:Diner {user_id: $diner_id}), (l:Location {zone: $zone}) "
+                    "MERGE (d)-[li:LIVES_IN {street: $street, avenue: $avenue, number: $number, community: $community, reference: $reference}]->(l) "
+                    "RETURN li"
+                )
+                return tx.run(create_query, **relationship).single()[0]
         except Exception as e:
             return 400
         
@@ -1250,6 +1258,22 @@ class AuraNeo4j:
                     session.write_transaction(self._run_query_csv, query, **row)
 
         return 200
+    
+    def load_used_in_csv(self, file_path: str):
+        # Abrir el archivo CSV y leer los datos
+        with open(file_path, newline='', encoding='utf-8') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                # Construir la consulta para insertar cada fila en Neo4j
+                query = """
+                MATCH (d:Dish {name: $dish_name}), (i:Ingredient {name: $ingredient_name})
+                CREATE (i)-[hi:USED_IN {quantity: $quantity, cook_method: $cook_method, cook_time: $cook_time}]->(d)
+                """
+                # Ejecutar la consulta para insertar la fila actual en Neo4j
+                with self.driver.session() as session:
+                    session.write_transaction(self._run_query_csv, query, **row)
+
+        return 200
 
     # Método _run_query_csv actualizado para tomar parámetros adicionales
     @staticmethod
@@ -1551,7 +1575,7 @@ def fill_db_diner_restaurants_visit():
             "dishes": [random.choice(dishes) for _ in range(1)],
             "total": random.randint(10, 1000),
             # fecha datetime now formato: 2024-04-16T06:17:40.397000000Z
-            "date": str(datetime),
+            "date": str(datetime.now()),
             "rating": random.randint(1, 5),
             "comment": "Comentario " + str(random.randint(1, 100))            
 
@@ -1612,10 +1636,29 @@ def fill_db_restaurant_has_delivery():
         }
         aura.restaurant_has_delivery(relationship)
 
+#relacion entre diner y location
+def fill_db_diner_location():
+    aura = AuraNeo4j()
+    # obtener todos los usuarios y locaciones
+    diners = aura.get_all_diners()
+    locations = aura.get_all_location_zones()
+    # crear 1000 relaciones entre usuarios y locaciones con datos random
+    for _ in range(1500):
+        relationship = {
+            # con estas propiedades {street: $street, avenue: $avenue, number: $number, community: $community, reference: $reference}
+            "diner_id": random.choice(diners),
+            "zone": random.choice(locations),
+            "street": "Calle " + str(random.randint(1, 100)),
+            "avenue": "Avenida " + str(random.randint(1, 100)),
+            "number": random.randint(1, 100),
+            "community": "Comunidad " + str(random.randint(1, 100)),
+            "reference": "Referencia " + str(random.randint(1, 100)),
+        }
+        aura.diner_lives_in(relationship)
 
 
 if __name__ == "__main__":
-    fill_db_ingredients()    
+    #fill_db_ingredients()    
     #fill_db_dishes()
     #fill_db_dish_ingredients()
     #fill_db_restaurants()
@@ -1630,9 +1673,11 @@ if __name__ == "__main__":
     #fill_db_diner_on_restaurants()
     #fill_db_diner_dish_opinion()
     #fill_db_restaurant_has_delivery()
+    #fill_db_diner_location()
     #print("hello world")
     aura = AuraNeo4j()
     aura.load_ingredients_from_csv("./backend/csv/ingredientes.csv")
     aura.load_dishes_from_csv("./backend/csv/dishes.csv")
-    aura.load_parking_from_csv("./backend/csv/parkings.csv")
+    #aura.load_parking_from_csv("./backend/csv/parkings.csv")
+    aura.load_used_in_csv("./backend/csv/used_in.csv")
     
